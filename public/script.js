@@ -29,30 +29,27 @@ if (document.getElementById("fetchData")) {
 // LOGIN PAGE
 // ===========================
 if (document.getElementById("loginSubmit")) {
-    document.getElementById("loginSubmit").addEventListener("click", async () => {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const credentials = btoa(`${username}:${password}`);
 
-        try {
-            const response = await fetch("http://localhost:8080/api/usuarios", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
-            });
+  const res = await fetch('https://localhost:8080/api/pedidos', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${credentials}`
+    }
+  });
 
-            const result = await response.json();
-
-            document.getElementById("loginOutput").innerText =
-                result.message || "Login successful!";
-
-            if (response.ok) {
-                window.location.href = "songs.html";
-            }
-        } catch (error) {
-            document.getElementById("loginOutput").innerText =
-                "Error: " + error.message;
-        }
-    });
+  if (res.ok) {
+    // Guardar credenciales para mantener sesión
+    sessionStorage.setItem('auth', credentials);
+    window.location.href = '/songs.html'; // Redirigir
+  } else {
+    alert('Credenciales incorrectas');
+  }
+});
 }
 
 
