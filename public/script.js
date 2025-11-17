@@ -1,3 +1,77 @@
+// Shared functions (e.g., for all pages)
+function showOutput(message) {
+    const output = document.getElementById('output');
+    if (output) output.innerText = message;
+}
+
+// Home page logic
+if (document.getElementById('fetchData')) {
+    document.getElementById('fetchData').addEventListener('click', async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/playlist');
+            const data = await response.json();
+            showOutput(JSON.stringify(data));
+        } catch (error) {
+            showOutput('Error: ' + error.message);
+        }
+    });
+}
+
+// Login page logic
+if (document.getElementById('loginSubmit')) {
+    document.getElementById('loginSubmit').addEventListener('click', async () => {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        try {
+            const response = await fetch('http://localhost:8080/api/usuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const result = await response.json();
+            document.getElementById('loginOutput').innerText = result.message || 'Login successful!';
+            if (response.ok) window.location.href = 'songs.html';  // Redirect on success
+        } catch (error) {
+            document.getElementById('loginOutput').innerText = 'Error: ' + error.message;
+        }
+    });
+}
+
+// Songs page logic
+if (document.getElementById('loadSongs')) {
+    document.getElementById('loadSongs').addEventListener('click', async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/canciones');
+            const songs = await response.json();
+            displaySongs(songs);
+        } catch (error) {
+            document.getElementById('songsContainer').innerText = 'Error: ' + error.message;
+        }
+    });
+
+    function displaySongs(songs) {
+        const container = document.getElementById('songsContainer');
+        container.innerHTML = '';
+        songs.forEach(song => {
+            const songCard = document.createElement('div');
+            songCard.className = 'song-card';
+            songCard.innerHTML = `
+                <h3>${song.title}</h3>
+                <p>Artist: ${song.artist}</p>
+                <p>Album: ${song.album}</p>
+                <button onclick="playSong(${song.id})">Play</button>
+            `;
+            container.appendChild(songCard);
+        });
+    }
+
+    function playSong(id) {
+        alert(`Playing song ID: ${id}`);
+    }
+}
+
+
+/*
 // Screen switching
 document.getElementById('homeBtn').addEventListener('click', () => showScreen('homeScreen'));
 document.getElementById('loginBtn').addEventListener('click', () => showScreen('loginScreen'));
@@ -42,4 +116,4 @@ document.getElementById('fetchData').addEventListener('click', async () => {
     }
 });
 
-// Existing fetch code for home screen...
+// Existing fetch code for home screen...*/

@@ -10,6 +10,11 @@ app.get('/api/test', (req, res) => {
     res.json({ message: 'Hello from Node.js front-end!' });
 });
 
+// Add this before app.listen()
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/songs.html');
+});
+
 app.listen(port, () => {
     console.log(`Front-end server running at http://localhost:${port}`);
 });

@@ -1,2 +1,3 @@
-body { font-family: Arial, sans-serif; text-align: center; }
-button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+nav { margin-bottom: 20px; }
+nav a { margin: 0 10px; text-decoration: none; color: #007bff; }
+nav a:hover { text-decoration: underline; }
