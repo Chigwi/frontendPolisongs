@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const credentials = btoa(`${username}:${password}`);
 
       try {
-        const res = await fetch('https://localhost:8080/api/pedidos', {
+        const res = await fetch('http://localhost:8080/api/pedidos', {
           method: 'GET',
           headers: {
             'Authorization': `Basic ${credentials}`
