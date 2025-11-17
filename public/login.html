@@ -6,17 +6,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav>
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
         <a href="songs.html">Songs</a>
          <a href="catalogo.html">Playlists</a>
     </nav>
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button id="loginSubmit">Login</button>
-    <div id="loginOutput"></div>
-    <script src="script.js"></script>
+
+<form id="loginForm">
+  <input type="text" id="username" placeholder="Usuario" required />
+  <input type="password" id="password" placeholder="Contraseña" required />
+  <button type="submit">Iniciar sesión</button>
+</form>
+<script src="script.js"></script>
 </body>
 </html>

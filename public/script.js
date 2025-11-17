@@ -28,29 +28,38 @@ if (document.getElementById("fetchData")) {
 // ===========================
 // LOGIN PAGE
 // ===========================
-if (document.getElementById("loginSubmit")) {
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const credentials = btoa(`${username}:${password}`);
+document.addEventListener('DOMContentLoaded', () => {
+    alert('sapopinga');
+  const form = document.getElementById('loginForm');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const credentials = btoa(`${username}:${password}`);
 
-  const res = await fetch('https://localhost:8080/api/pedidos', {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${credentials}`
-    }
-  });
+      try {
+        const res = await fetch('https://localhost:8080/api/pedidos', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Basic ${credentials}`
+          }
+        });
 
-  if (res.ok) {
-    // Guardar credenciales para mantener sesión
-    sessionStorage.setItem('auth', credentials);
-    window.location.href = '/songs.html'; // Redirigir
-  } else {
-    alert('Credenciales incorrectas');
+        if (res.ok) {
+          sessionStorage.setItem('auth', credentials);
+          alert('Credenciales correctas');
+          window.location.href = '/songs.html';
+        } else {
+          alert('Credenciales incorrectas');
+        }
+      } catch (err) {
+        alert('Error de conexión con el servidor');
+        console.error(err);
+      }
+    });
   }
 });
-}
 
 
 
