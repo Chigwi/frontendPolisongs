@@ -1,10 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My App - Songs</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .catalogo {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .cancion {
+        background: white;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+
+    .cancion:hover {
+        transform: scale(1.03);
+    }
+
+    .cancion img {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .cancion-title {
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 1.1em;
+    }
+</style>
+
 <body>
     <nav>
         <a href="home.html">Home</a>
@@ -13,7 +61,7 @@
     </nav>
     <h2>Song Catalog</h2>
     <button id="loadSongs">Load Songs</button>
-    <div id="songsContainer" class="catalog-grid"></div>
+    <div id="songsContainer" class="catalogo"></div>  <!-- Fixed ID (no space), updated class to match styles -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -43,35 +43,37 @@ if (document.getElementById('loadSongs')) {
         try {
             const response = await fetch('http://localhost:8080/api/canciones');
             const songs = await response.json();
+            console.log('Fetched songs:', songs);  // Debug: Check if data is correct
             displaySongs(songs);
         } catch (error) {
+            console.error('Error fetching songs:', error);  // Debug: Log errors
             document.getElementById('songsContainer').innerText = 'Error: ' + error.message;
         }
     });
-
-   function displaySongs(songs) {
-    const container = document.getElementById('songsContainer');
-    container.innerHTML = '';  // Clear previous content
-    songs.forEach(song => {
-        const songCard = document.createElement('div');
-        songCard.className = 'song-card';
-        songCard.innerHTML = `
-            <h3>${song.nombre}</h3>  <!-- Changed from song.title to song.nombre -->
-            <p>Artist: ${song.artista}</p>  <!-- Changed from song.artist to song.artista -->
-            <p>Year: ${song.annoPublicacion}</p>  <!-- Changed from song.album to song.annoPublicacion -->
-            <p>Price: $${song.precio}</p>  <!-- Added price -->
-            <p>Format: ${song.formato.nombre}</p>  <!-- Added format -->
-            <button onclick="playSong(${song.nombre})">Play</button>  <!-- Use nombre if no ID -->
-        `;
-        container.appendChild(songCard);
-    });
+    function displaySongs(songs) {
+        const container = document.getElementById('songsContainer');
+        container.innerHTML = '';  // Clear previous content
+        songs.forEach(song => {
+            const songCard = document.createElement('div');
+            songCard.className = 'cancion';  // Changed to match your CSS class
+            songCard.innerHTML = `
+                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="cover">  <!-- Placeholder since no cover in JSON -->
+                <div class="cancion-title">${song.nombre}</div>  <!-- Added class for styling -->
+                <p>Format: ${song.formato.nombre}</p>
+                <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>  <!-- Escaped quotes for safety -->
+            `;
+            container.appendChild(songCard);
+        });
+    }
+    function playSong(songName) {
+        alert(`Playing: ${songName}`);
+    }
 }
-
 
     function playSong(nomre) {
         alert(`Playing song ID: ${nombre}`);
     }
-}
+
 
 // Función compartida (para debug o mostrar errores si quieres)
 function showOutput(message) {
