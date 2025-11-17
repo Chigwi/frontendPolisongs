@@ -28,38 +28,29 @@ if (document.getElementById("fetchData")) {
 // ===========================
 // LOGIN PAGE
 // ===========================
-document.addEventListener('DOMContentLoaded', () => {
-    alert('sapopinga');
-  const form = document.getElementById('loginForm');
-  if (form) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const credentials = btoa(`${username}:${password}`);
+if (document.getElementById("loginSubmit")) {
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const credentials = btoa(`${username}:${password}`);
 
-      try {
-        const res = await fetch('http://localhost:8080/api/pedidos', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Basic ${credentials}`
-          }
-        });
+  const res = await fetch('https://localhost:8080/api/pedidos', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${credentials}`
+    }
+  });
 
-        if (res.ok) {
-          sessionStorage.setItem('auth', credentials);
-          alert('Credenciales correctas');
-          window.location.href = '/songs.html';
-        } else {
-          alert('Credenciales incorrectas');
-        }
-      } catch (err) {
-        alert('Error de conexión con el servidor');
-        console.error(err);
-      }
-    });
+  if (res.ok) {
+    // Guardar credenciales para mantener sesión
+    sessionStorage.setItem('auth', credentials);
+    window.location.href = '/dashboard.html'; // Redirigir
+  } else {
+    alert('Credenciales incorrectas');
   }
 });
+}
 
 
 
@@ -68,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===========================
 if (document.getElementById("songsContainer")) {
 
-    async function displaySongs() {
+     async function displaySongs(songs) {
         try {
             const response = await fetch("http://localhost:8080/api/canciones");
             const songs = await response.json();
@@ -77,46 +68,30 @@ if (document.getElementById("songsContainer")) {
             container.innerHTML = "";
 
             songs.forEach(song => {
-                const songCard = document.createElement("div");
-                songCard.className = "cancion";
+            const songCard = document.createElement("div");
+            songCard.className = "cancion";
 
-                // PRIMERO agregamos el HTML
-                songCard.innerHTML = `
-                    <img src="img/musica.png" alt="cover">
-                    <div class="cancion-title">${song.nombre}</div>
+            songCard.innerHTML = `
+                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="cover">
+                <div class="cancion-title">${song.nombre}</div>
+                <p>Formato: ${song.formato.nombre}</p>
+                <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>
+            `;
 
-                    <div class="song-details" style="display:none;">
-                        <p><strong>Artista:</strong> ${song.artista}</p>
-                        <p><strong>Año:</strong> ${song.annoPublicacion}</p>
-                        <p><strong>Precio:</strong> ${song.precio}</p>
-                        <p><strong>Formato:</strong> ${song.formato.nombre}</p>
-                    </div>
-
-                    <button class="toggleBtn">Ver detalles</button>
-                `;
-
-                // LUEGO seleccionamos los elementos
-                const btn = songCard.querySelector(".toggleBtn");
-                const details = songCard.querySelector(".song-details");
-
-                // Y AHORA agregamos el evento
-                btn.addEventListener("click", () => {
-                    const visible = details.style.display === "block";
-
-                    details.style.display = visible ? "none" : "block";
-                    btn.textContent = visible ? "Ver detalles" : "Ocultar detalles";
-                });
-
-                container.appendChild(songCard);
+            container.appendChild(songCard);
             });
-
         } catch (error) {
             document.getElementById("songsContainer").innerText =
                 "Error: " + error.message;
         }
     }
+        displaySongs();
 
-    displaySongs();
+
+    window.playSong = function (songName) {
+        alert(`Reproduciendo: ${songName}`);
+    };
+
 }
 
 
@@ -139,10 +114,8 @@ if (document.getElementById("catalogo")) {
                 card.className = "playlist-card";
 
                 card.innerHTML = `
-                    <img src="img/disco.jpg" alt="${pl.nombre}">
+                    <img src="${pl.cover}" alt="${pl.nombre}">
                     <h3>${pl.nombre}</h3>
-                    <button onclick="playSong('${pl.nombre.replace(/'/g, "\\'")}')">Play</button>
-                    
                 `;
 
                 contenedor.appendChild(card);
@@ -156,6 +129,37 @@ if (document.getElementById("catalogo")) {
    cargarCatalogo();
 }
 
+// ===========================
+//  HISTORIAL DE PEDIDOS
+// ===========================
+
+if (document.getElementById("pedidos")){
+    
+    fetch("http://localhost:8080/api/pedidos")
+
+        // Función para mostrar pedidos en tabla
+        function mostrarPedidos(lista) {
+            let html = "<table>";
+            html += "<tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Fecha</th></tr>";
+            lista.forEach(pedido => {
+                html += `<tr>
+                            <td>${pedido.idPedido}</td>
+                            <td>${pedido.envio.empresaEnvios}</td>
+                            <td>${pedido.experiencia.calificacion}</td>
+                            <td>${pedido.experiencia.descripcion}</td>
+                            <td>${pedido.comprobante}</td>
+                            <td>${pedido.fecha}</td>
+                            <td>${pedido.comprador}</td>
+                         </tr>`;
+            });
+            html += "</table>";
+            document.getElementById("contenedor-pedidos").innerHTML = html;
+        }
+
+        // Mostrar pedidos al cargar la página
+        mostrarPedidos(pedidos);
+
+}
 
 
 
