@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo de Playlists</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .playlist {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .playlist:hover {
+      transform: scale(1.03);
+    }
+
+    .playlist img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .playlist-title {
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Catálogo de Playlists</h1>
+
+  <!-- Contenedor donde se insertarán las tarjetas -->
+  <div id="catalogo" class="catalogo"></div>
+
+  <!-- Conexión al script -->
+  <script src="./script.js"></script>
+</body>
+</html>

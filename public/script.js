@@ -73,6 +73,45 @@ if (document.getElementById('loadSongs')) {
     }
 }
 
+// Función compartida (para debug o mostrar errores si quieres)
+function showOutput(message) {
+    const output = document.getElementById('output');
+    if (output) output.innerText = message;
+}
+
+// Lógica para la página del catálogo
+if (document.getElementById('catalogo')) {
+
+    async function cargarCatalogo() {
+        try {
+            const response = await fetch('http://localhost:8080/api/playlist');
+            const playlists = await response.json();
+
+            const contenedor = document.getElementById('catalogo');
+            contenedor.innerHTML = ""; // Limpiar catálogo
+
+            playlists.forEach(pl => {
+                const card = document.createElement("div");
+                card.className = "playlist-card";
+
+                card.innerHTML = `
+                    <img src="${pl.cover}" alt="cover">
+                    <h3>${pl.nombre}</h3>
+                `;
+
+                contenedor.appendChild(card);
+            });
+
+        } catch (error) {
+            showOutput('Error cargando catálogo: ' + error.message);
+        }
+    }
+
+    // Ejecutar al cargar la página
+    cargarCatalogo();
+}
+
+
 
 /*
 // Screen switching
