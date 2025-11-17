@@ -1,0 +1,12 @@
+{
+  "name": "polisong_stock",
+  "version": "1.0.0",
+  "description": "frontend de la app de polisongstock",
+  "license": "ISC",
+  "author": "sdorado/sarce/allie",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
