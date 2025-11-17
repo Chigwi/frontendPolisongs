@@ -1,103 +1,122 @@
-// Shared functions (e.g., for all pages)
+// ===========================
+// np Función compartida
+// ===========================
 function showOutput(message) {
-    const output = document.getElementById('output');
+    const output = document.getElementById("output");
     if (output) output.innerText = message;
 }
 
-// Home page logic
-if (document.getElementById('fetchData')) {
-    document.getElementById('fetchData').addEventListener('click', async () => {
+
+
+// ===========================
+//  HOME PAGE (fetchData)
+// ===========================
+if (document.getElementById("fetchData")) {
+    document.getElementById("fetchData").addEventListener("click", async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/playlist');
+            const response = await fetch("http://localhost:8080/api/playlist");
             const data = await response.json();
-            showOutput(JSON.stringify(data));
+            showOutput(JSON.stringify(data, null, 2));
         } catch (error) {
-            showOutput('Error: ' + error.message);
+            showOutput("Error: " + error.message);
         }
     });
 }
 
-// Login page logic
-if (document.getElementById('loginSubmit')) {
-    document.getElementById('loginSubmit').addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+
+
+// ===========================
+// LOGIN PAGE
+// ===========================
+if (document.getElementById("loginSubmit")) {
+    document.getElementById("loginSubmit").addEventListener("click", async () => {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
         try {
-            const response = await fetch('http://localhost:8080/api/usuarios', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch("http://localhost:8080/api/usuarios", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
+
             const result = await response.json();
-            document.getElementById('loginOutput').innerText = result.message || 'Login successful!';
-            if (response.ok) window.location.href = 'songs.html';  // Redirect on success
+
+            document.getElementById("loginOutput").innerText =
+                result.message || "Login successful!";
+
+            if (response.ok) {
+                window.location.href = "songs.html";
+            }
         } catch (error) {
-            document.getElementById('loginOutput').innerText = 'Error: ' + error.message;
+            document.getElementById("loginOutput").innerText =
+                "Error: " + error.message;
         }
     });
 }
 
-// Songs page logic
-if (document.getElementById('loadSongs')) {
-    document.getElementById('loadSongs').addEventListener('click', async () => {
+
+
+// ===========================
+//  SONGS PAGE
+// ===========================
+if (document.getElementById("loadSongs")) {
+    document.getElementById("loadSongs").addEventListener("click", async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/canciones');
+            const response = await fetch("http://localhost:8080/api/canciones");
             const songs = await response.json();
-            console.log('Fetched songs:', songs);  // Debug: Check if data is correct
             displaySongs(songs);
         } catch (error) {
-            console.error('Error fetching songs:', error);  // Debug: Log errors
-            document.getElementById('songsContainer').innerText = 'Error: ' + error.message;
+            document.getElementById("songsContainer").innerText =
+                "Error: " + error.message;
         }
     });
+
     function displaySongs(songs) {
-        const container = document.getElementById('songsContainer');
-        container.innerHTML = '';  // Clear previous content
+        const container = document.getElementById("songsContainer");
+        container.innerHTML = "";
+
         songs.forEach(song => {
-            const songCard = document.createElement('div');
-            songCard.className = 'cancion';  // Changed to match your CSS class
+            const songCard = document.createElement("div");
+            songCard.className = "cancion";
+
             songCard.innerHTML = `
-                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="cover">  <!-- Placeholder since no cover in JSON -->
-                <div class="cancion-title">${song.nombre}</div>  <!-- Added class for styling -->
-                <p>Format: ${song.formato.nombre}</p>
-                <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>  <!-- Escaped quotes for safety -->
+                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="cover">
+                <div class="cancion-title">${song.nombre}</div>
+                <p>Formato: ${song.formato.nombre}</p>
+                <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>
             `;
+
             container.appendChild(songCard);
         });
     }
-    function playSong(songName) {
-        alert(`Playing: ${songName}`);
-    }
+
+    window.playSong = function (songName) {
+        alert(`Reproduciendo: ${songName}`);
+    };
 }
 
-    function playSong(nomre) {
-        alert(`Playing song ID: ${nombre}`);
-    }
 
 
-// Función compartida (para debug o mostrar errores si quieres)
-function showOutput(message) {
-    const output = document.getElementById('output');
-    if (output) output.innerText = message;
-}
-
-// Lógica para la página del catálogo
-if (document.getElementById('catalogo')) {
+// ===========================
+//  CATÁLOGO DE PLAYLISTS
+// ===========================
+if (document.getElementById("catalogo")) {
 
     async function cargarCatalogo() {
         try {
-            const response = await fetch('http://localhost:8080/api/playlist');
+            const response = await fetch("http://localhost:8080/api/playlist");
             const playlists = await response.json();
 
-            const contenedor = document.getElementById('catalogo');
-            contenedor.innerHTML = ""; // Limpiar catálogo
+            const contenedor = document.getElementById("catalogo");
+            contenedor.innerHTML = "";
 
             playlists.forEach(pl => {
                 const card = document.createElement("div");
                 card.className = "playlist-card";
 
                 card.innerHTML = `
-                    <img src="${pl.cover}" alt="cover">
+                    <img src="${pl.cover}" alt="${pl.nombre}">
                     <h3>${pl.nombre}</h3>
                 `;
 
@@ -105,13 +124,13 @@ if (document.getElementById('catalogo')) {
             });
 
         } catch (error) {
-            showOutput('Error cargando catálogo: ' + error.message);
+            showOutput("Error cargando catálogo: " + error.message);
         }
     }
 
-    // Ejecutar al cargar la página
-    cargarCatalogo();
+   cargarCatalogo();
 }
+
 
 
 
