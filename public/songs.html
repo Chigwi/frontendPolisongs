@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My App - Songs</title>
+    <title>Catálogo de Canciones</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,10 +15,6 @@
         padding: 20px;
     }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
 
     .catalogo {
         display: grid;
@@ -55,16 +51,15 @@
 
 <body>
 
-    <!-- ⭐ NAV con link al catálogo de playlists -->
+    <!--NAV con link al catálogo de playlists -->
     <nav>
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
         <a href="songs.html">Songs</a>
         <a href="catalogo.html">Playlists</a> <!-- AÑADIDO -->
     </nav>
-
-    <h2>Song Catalog</h2>
-    <button id="loadSongs">Load Songs</button>
+    
+    <h1>Catálogo de Canciones</h1>
 
     <div id="songsContainer" class="catalogo"></div>
 

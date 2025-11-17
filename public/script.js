@@ -60,23 +60,17 @@ if (document.getElementById("loginSubmit")) {
 // ===========================
 //  SONGS PAGE
 // ===========================
-if (document.getElementById("loadSongs")) {
-    document.getElementById("loadSongs").addEventListener("click", async () => {
+if (document.getElementById("songsContainer")) {
+
+     async function displaySongs(songs) {
         try {
             const response = await fetch("http://localhost:8080/api/canciones");
             const songs = await response.json();
-            displaySongs(songs);
-        } catch (error) {
-            document.getElementById("songsContainer").innerText =
-                "Error: " + error.message;
-        }
-    });
+            
+            const container = document.getElementById("songsContainer");
+            container.innerHTML = "";
 
-    function displaySongs(songs) {
-        const container = document.getElementById("songsContainer");
-        container.innerHTML = "";
-
-        songs.forEach(song => {
+            songs.forEach(song => {
             const songCard = document.createElement("div");
             songCard.className = "cancion";
 
@@ -88,12 +82,19 @@ if (document.getElementById("loadSongs")) {
             `;
 
             container.appendChild(songCard);
-        });
+            });
+        } catch (error) {
+            document.getElementById("songsContainer").innerText =
+                "Error: " + error.message;
+        }
     }
+        displaySongs();
+
 
     window.playSong = function (songName) {
         alert(`Reproduciendo: ${songName}`);
     };
+
 }
 
 
