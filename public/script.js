@@ -29,7 +29,6 @@ if (document.getElementById("fetchData")) {
 // LOGIN PAGE
 // ===========================
 document.addEventListener('DOMContentLoaded', () => {
-    alert('sapopinga');
   const form = document.getElementById('loginForm');
   if (form) {
     form.addEventListener('submit', async (e) => {
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           sessionStorage.setItem('auth', credentials);
           alert('Credenciales correctas');
-          window.location.href = '/songs.html';
+          window.location.href = '/pedidos.html';
         } else {
           alert('Credenciales incorrectas');
         }
@@ -162,21 +161,41 @@ if (document.getElementById("catalogo")) {
 //  HISTORIAL DE PEDIDOS
 // ===========================
 
-if (document.getElementById("pedidos")){
-    
-    fetch("http://localhost:8080/api/pedidos")
+if (document.getElementById("contenedor-pedidos")) {
+    const credentials = sessionStorage.getItem('auth');
 
-        // Función para mostrar pedidos en tabla
+    if (!credentials) {
+        alert("No estás autenticado. Redirigiendo al login...");
+        window.location.href = '/login.html'; // o la ruta de tu login
+    } else {
+        fetch("http://localhost:8080/api/pedidos", {
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${credentials}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al obtener los pedidos");
+            }
+            return response.json();
+        })
+        .then(pedidos => {
+            mostrarPedidos(pedidos);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+
         function mostrarPedidos(lista) {
             let html = "<table>";
-            html += "<tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Fecha</th></tr>";
+            html += "<tr><th>ID</th><th>Empresa Envíos</th><th>Calificación</th><th>Descripción</th><th>Fecha</th><th>Comprador</th></tr>";
             lista.forEach(pedido => {
                 html += `<tr>
                             <td>${pedido.idPedido}</td>
                             <td>${pedido.envio.empresaEnvios}</td>
-                            <td>${pedido.experiencia.calificacion}</td>
-                            <td>${pedido.experiencia.descripcion}</td>
-                            <td>${pedido.comprobante}</td>
+                            <td>${pedido.experiencia.calificacion || "Experiencia pendiente"}</td>
+                            <td>${pedido.experiencia.descripcion || "Experiencia pendiente"}</td>
                             <td>${pedido.fecha}</td>
                             <td>${pedido.comprador}</td>
                          </tr>`;
@@ -184,10 +203,7 @@ if (document.getElementById("pedidos")){
             html += "</table>";
             document.getElementById("contenedor-pedidos").innerHTML = html;
         }
-
-        // Mostrar pedidos al cargar la página
-        mostrarPedidos(pedidos);
-
+    }
 }
 
 
