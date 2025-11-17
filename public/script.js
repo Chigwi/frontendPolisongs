@@ -158,6 +158,37 @@ if (document.getElementById("catalogo")) {
 
 
 
+// ===========================
+//  HISTORIAL DE PEDIDOS
+// ===========================
+
+if (document.getElementById("pedidos")){
+    
+    fetch("http://localhost:8080/api/pedidos")
+
+        // Función para mostrar pedidos en tabla
+        function mostrarPedidos(lista) {
+            let html = "<table>";
+            html += "<tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Fecha</th></tr>";
+            lista.forEach(pedido => {
+                html += `<tr>
+                            <td>${pedido.idPedido}</td>
+                            <td>${pedido.envio.empresaEnvios}</td>
+                            <td>${pedido.experiencia.calificacion}</td>
+                            <td>${pedido.experiencia.descripcion}</td>
+                            <td>${pedido.comprobante}</td>
+                            <td>${pedido.fecha}</td>
+                            <td>${pedido.comprador}</td>
+                         </tr>`;
+            });
+            html += "</table>";
+            document.getElementById("contenedor-pedidos").innerHTML = html;
+        }
+
+        // Mostrar pedidos al cargar la página
+        mostrarPedidos(pedidos);
+
+}
 
 
 /*
