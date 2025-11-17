@@ -125,6 +125,8 @@ if (document.getElementById("catalogo")) {
                 card.innerHTML = `
                     <img src="${pl.cover}" alt="${pl.nombre}">
                     <h3>${pl.nombre}</h3>
+                    <button onclick="playSong('${pl.nombre.replace(/'/g, "\\'")}')">Play</button>
+                    
                 `;
 
                 contenedor.appendChild(card);
