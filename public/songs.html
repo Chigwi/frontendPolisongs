@@ -5,62 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo de Canciones</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #d7eaff; /* Azul claro suave */
+            padding: 20px;
+            color: #2c3e50;
+        }
+
+        /* NAV CORPORATIVO */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid #dce3eb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 6px;
+            transition: 0.25s;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            background: #e9eef5;
+            color: #1a2a33;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #1f2d3d;
+        }
+
+        /* Grid general */
+        .catalogo {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 10px;
+        }
+
+        /* Tarjetas de canciones */
+        .cancion {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: 0.25s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .cancion:hover {
+            transform: translateY(-5px);
+        }
+
+        .cancion img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #eef4ff; /* Fondo si no hay imagen */
+        }
+
+        .cancion-title {
+            font-weight: 600;
+            margin-top: 12px;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        /* Espacio para icono o mini-banner */
+        .image-slot {
+            width: 140px;
+            height: 140px;
+            background: #ffffff;
+            border: 2px dashed #8aa6c9;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #7288a6;
+        }
+    </style>
 </head>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-    }
-
-
-    .catalogo {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
-        padding: 10px;
-    }
-
-    .cancion {
-        background: white;
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: 0.2s ease;
-        cursor: pointer;
-    }
-
-    .cancion:hover {
-        transform: scale(1.03);
-    }
-
-    .cancion img {
-        width: 100%;
-        border-radius: 10px;
-    }
-
-    .cancion-title {
-        font-weight: bold;
-        margin-top: 10px;
-        text-align: center;
-        font-size: 1.1em;
-    }
-</style>
 
 <body>
 
-    <!--NAV con link al catálogo de playlists -->
+    <!-- NAV -->
     <nav>
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
         <a href="songs.html">Songs</a>
-        <a href="catalogo.html">Playlists</a> <!-- AÑADIDO -->
+        <a href="catalogo.html">Playlists</a>
     </nav>
-    
+
+    <!-- Logo o imagen opcional arriba -->
+    <div class="image-slot">Icono aquí</div>
+
     <h1>Catálogo de Canciones</h1>
 
+    <!-- Contenedor dinámico -->
     <div id="songsContainer" class="catalogo"></div>
 
     <script src="script.js"></script>

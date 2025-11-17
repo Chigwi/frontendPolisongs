@@ -1,9 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>My App - Login</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #d7eaff; /* Azul claro suave */
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+        }
+
+        /* NAV CORPORATIVO */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid #dce3eb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 6px;
+            transition: 0.25s;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            background: #e9eef5;
+            color: #1a2a33;
+        }
+
+        /* LOGIN CARD */
+        #loginForm {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            width: 320px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        #loginForm input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #c9d6e2;
+            font-size: 1rem;
+        }
+
+        #loginForm button {
+            background: #3a7afe;
+            color: white;
+            padding: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        #loginForm button:hover {
+            background: #2f68db;
+            transform: translateY(-3px);
+        }
+
+        /* ESPACIO PARA ICONO / LOGO */
+        .image-slot {
+            width: 140px;
+            height: 140px;
+            background: #ffffff;
+            border: 2px dashed #8aa6c9;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #7288a6;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,14 +107,18 @@
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
         <a href="songs.html">Songs</a>
-         <a href="catalogo.html">Playlists</a>
+        <a href="catalogo.html">Playlists</a>
     </nav>
 
-<form id="loginForm">
-  <input type="text" id="username" placeholder="Usuario" required />
-  <input type="password" id="password" placeholder="Contraseña" required />
-  <button type="submit">Iniciar sesión</button>
-</form>
-<script src="script.js"></script>
+    <!-- Espacio para logo o icono -->
+    <div class="image-slot">Logo aquí</div>
+
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Usuario" required />
+        <input type="password" id="password" placeholder="Contraseña" required />
+        <button type="submit">Iniciar sesión</button>
+    </form>
+
+    <script src="script.js"></script>
 </body>
 </html>

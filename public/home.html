@@ -1,20 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>My App - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoliSongStock</title>
+
+    <!-- Tipografía corporativa -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: #d7eaff;  /* azul claro suave */
+        color: #2c3e50;
+        text-align: center;
+        padding-bottom: 40px;
+    }
+
+    /* NAV CORPORATIVO */
+    nav {
+        background: #ffffff; 
+        border-bottom: 1px solid #dce3eb;
+        padding: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 35px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    nav a {
+        color: #2c3e50;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 10px 18px;
+        border-radius: 6px;
+        transition: 0.25s;
+        font-size: 1rem;
+    }
+
+    nav a:hover {
+        background: #e9eef5;
+        color: #1a2a33;
+    }
+
+    /* HERO */
+    .hero {
+        margin-top: 60px;
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        font-weight: 800;
+        color: #1f2d3d;
+    }
+
+    h2 {
+        font-weight: 300;
+        opacity: 0.9;
+        margin-bottom: 40px;
+        font-size: 1.2rem;
+        color: #4a5864;
+    }
+
+    /* BOTÓN CORPORATIVO */
+    .btn {
+        background: #3a7afe;
+        color: white;
+        padding: 14px 28px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1.05rem;
+        cursor: pointer;
+        margin: 10px;
+        font-weight: 600;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.12);
+        transition: 0.25s;
+    }
+
+    .btn:hover {
+        background: #2f68db;
+        transform: translateY(-3px);
+    }
+
+    /* OUTPUT */
+    #output {
+        margin: 30px auto;
+        padding: 20px;
+        background: white;
+        width: 80%;
+        border-radius: 10px;
+        color: #2c3e50;
+        font-size: 0.95rem;
+        border: 1px solid #dce3eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        text-align: left;
+    }
+
+    /* ESPACIOS PARA ICONOS/IMÁGENES */
+    .image-slot {
+        width: 120px;
+        height: 120px;
+        background: #ffffff;
+        border: 2px dashed #8aa6c9;
+        border-radius: 12px;
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #7288a6;
+    }
+</style>
+
 <body>
+
+    <!-- NAV -->
     <nav>
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
         <a href="songs.html">Songs</a>
-         <a href="catalogo.html">Playlists</a>
+        <a href="catalogo.html">Playlists</a>
     </nav>
-    <h1>Welcome to My App</h1>
-    <button id="fetchData">Fetch Data from Backend</button>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>PoliSongStock</h1>
+        <h2>Plataforma musical profesional y catálogo inteligente</h2>
+
+        <!-- Espacio para insertar un logo o ícono -->
+        <div class="image-slot">Logo aquí</div>
+
+        <button id="fetchData" class="btn">Probar conexión al Backend</button>
+    </div>
+
+    <!-- Otra área para imágenes (por ejemplo banners o iconos complementarios) -->
+    <div class="image-slot">Imagen aquí</div>
+
     <div id="output"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
