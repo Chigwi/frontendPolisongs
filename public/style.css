@@ -83,5 +83,34 @@ h1 {
         height: 140px;
     }
 }
+.song-details {
+    background: #ffffffcc;
+    backdrop-filter: blur(4px);
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dde1f1;
+    color: #4c4f69;
+    font-size: 0.9em;
+    animation: fadeIn 0.25s ease;
+}
+
+.cancion button {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #5e60ce;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.cancion button:hover {
+    background: #4a4cc7;
+}
+
+
 
 
