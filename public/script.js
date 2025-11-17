@@ -49,24 +49,27 @@ if (document.getElementById('loadSongs')) {
         }
     });
 
-    function displaySongs(songs) {
-        const container = document.getElementById('songsContainer');
-        container.innerHTML = '';
-        songs.forEach(song => {
-            const songCard = document.createElement('div');
-            songCard.className = 'song-card';
-            songCard.innerHTML = `
-                <h3>${song.title}</h3>
-                <p>Artist: ${song.artist}</p>
-                <p>Album: ${song.album}</p>
-                <button onclick="playSong(${song.id})">Play</button>
-            `;
-            container.appendChild(songCard);
-        });
-    }
+   function displaySongs(songs) {
+    const container = document.getElementById('songsContainer');
+    container.innerHTML = '';  // Clear previous content
+    songs.forEach(song => {
+        const songCard = document.createElement('div');
+        songCard.className = 'song-card';
+        songCard.innerHTML = `
+            <h3>${song.nombre}</h3>  <!-- Changed from song.title to song.nombre -->
+            <p>Artist: ${song.artista}</p>  <!-- Changed from song.artist to song.artista -->
+            <p>Year: ${song.annoPublicacion}</p>  <!-- Changed from song.album to song.annoPublicacion -->
+            <p>Price: $${song.precio}</p>  <!-- Added price -->
+            <p>Format: ${song.formato.nombre}</p>  <!-- Added format -->
+            <button onclick="playSong(${song.nombre})">Play</button>  <!-- Use nombre if no ID -->
+        `;
+        container.appendChild(songCard);
+    });
+}
 
-    function playSong(id) {
-        alert(`Playing song ID: ${id}`);
+
+    function playSong(nomre) {
+        alert(`Playing song ID: ${nombre}`);
     }
 }
 
