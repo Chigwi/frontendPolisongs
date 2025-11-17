@@ -84,7 +84,7 @@ if (document.getElementById("songsContainer")) {
                 <img src="img/musica.png" alt="cover">
                 <div class="cancion-title">${song.nombre}</div>
                 <p>Formato: ${song.formato.nombre}</p>
-                <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>
+                <button onclick='playSong(${JSON.stringify(song)})'>Detalles</button>
             `;
 
             container.appendChild(songCard);
@@ -97,9 +97,19 @@ if (document.getElementById("songsContainer")) {
         displaySongs();
 
 
-    window.playSong = function (songName) {
-        alert(`Reproduciendo: ${songName}`);
-    };
+    window.playSong = function (song) {
+    const mensaje = `
+    Detalles:
+
+    Título: ${song.nombre}
+    Artista: ${song.artista}
+    Año publicación: ${song.annoPublicacion}
+    Precio: ${song.precio}
+    Formato: ${song.formato.nombre}
+    `;
+
+    alert(mensaje);
+};
 
 }
 
