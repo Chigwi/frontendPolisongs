@@ -81,7 +81,7 @@ if (document.getElementById("songsContainer")) {
             songCard.className = "cancion";
 
             songCard.innerHTML = `
-                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="cover">
+                <img src="img/musica.png" alt="cover">
                 <div class="cancion-title">${song.nombre}</div>
                 <p>Formato: ${song.formato.nombre}</p>
                 <button onclick="playSong('${song.nombre.replace(/'/g, "\\'")}')">Play</button>
@@ -123,7 +123,7 @@ if (document.getElementById("catalogo")) {
                 card.className = "playlist-card";
 
                 card.innerHTML = `
-                    <img src="${pl.cover}" alt="${pl.nombre}">
+                    <img src="img/disco.jpg" alt="${pl.nombre}">
                     <h3>${pl.nombre}</h3>
                     <button onclick="playSong('${pl.nombre.replace(/'/g, "\\'")}')">Play</button>
                     
