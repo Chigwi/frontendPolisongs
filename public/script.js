@@ -120,9 +120,6 @@ if (document.getElementById("songsContainer")) {
 }
 
 
-// ===========================
-//  CATÁLOGO DE PLAYLISTS
-// ===========================
 if (document.getElementById("catalogo")) {
   async function cargarCatalogo() {
     try {
@@ -139,48 +136,35 @@ if (document.getElementById("catalogo")) {
         card.innerHTML = `
           <img src="img/disco.jpg" alt="${pl.nombre}">
           <h3>${pl.nombre}</h3>
-
-          <div class="playlist-details" style="display:none;">
-            <div class="songs-list">Cargando canciones...</div>
-          </div>
-
           <button class="toggleBtn">Ver detalles</button>
         `;
 
         const btn = card.querySelector(".toggleBtn");
-        const details = card.querySelector(".playlist-details");
-        const songsList = card.querySelector(".songs-list");
 
         btn.addEventListener("click", async () => {
-          const visible = details.style.display === "block";
+          try {
+            const res = await fetch(`http://localhost:8080/api/playlist/${pl.idPlaylist}`);
+            const playlistDetails = await res.json();
 
-          if (!visible) {
-            // Solo cargar canciones si aún no se han cargado
-            if (!card.dataset.loaded) {
-              try {
-                const res = await fetch(`http://localhost:8080/api/playlist/${pl.idPlaylist}`);
-                const playlistDetails = await res.json();
+            // Título del modal
+            document.getElementById("modalTitle").textContent = playlistDetails.nombre;
 
-                if (playlistDetails.canciones && playlistDetails.canciones.length > 0) {
-                  songsList.innerHTML = playlistDetails.canciones.map(song => `
-                    <div class="cancion">
-                      <p><strong>${song.nombre}</strong> - ${song.artista}</p>
-                      <p>Artista: ${song.artista} | Formato: ${song.formato.nombre}</p>
-                    </div>
-                  `).join("");
-                } else {
-                  songsList.innerHTML = "<p>Esta playlist no tiene canciones.</p>";
-                }
+            // Canciones en el modal
+            const songsHtml = playlistDetails.canciones && playlistDetails.canciones.length > 0
+              ? playlistDetails.canciones.map(song => `
+                  <div class="cancion">
+                    <p><strong>${song.nombre}</strong> - ${song.artista}</p>
+                  </div>
+                `).join("")
+              : "<p>Esta playlist no tiene canciones.</p>";
 
-                card.dataset.loaded = "true";
-              } catch (err) {
-                songsList.innerHTML = "<p>Error al cargar canciones.</p>";
-              }
-            }
+            document.getElementById("modalSongs").innerHTML = songsHtml;
+
+            // Mostrar el modal
+            document.getElementById("playlistModal").style.display = "block";
+          } catch (err) {
+            console.error("Error al cargar detalles:", err);
           }
-
-          details.style.display = visible ? "none" : "block";
-          btn.textContent = visible ? "Ver detalles" : "Ocultar detalles";
         });
 
         contenedor.appendChild(card);
@@ -192,6 +176,22 @@ if (document.getElementById("catalogo")) {
   }
 
   cargarCatalogo();
+
+  // Lógica para cerrar el modal
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("playlistModal");
+    const closeBtn = document.querySelector(".close");
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  });
 }
 
 
