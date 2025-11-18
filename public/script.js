@@ -119,6 +119,7 @@ if (document.getElementById("songsContainer")) {
     displaySongs();
 }
 
+//CATALOGO//
 
 if (document.getElementById("catalogo")) {
   async function cargarCatalogo() {
@@ -131,12 +132,15 @@ if (document.getElementById("catalogo")) {
 
       playlists.forEach(pl => {
         const card = document.createElement("div");
-        card.className = "playlist-card";
+        card.className = "playlist"; // MISMA CLASE QUE TU CSS
 
         card.innerHTML = `
           <img src="img/disco.jpg" alt="${pl.nombre}">
-          <h3>${pl.nombre}</h3>
-          <button class="toggleBtn">Ver detalles</button>
+          <div class="playlist-title">${pl.nombre}</div>
+
+          <button class="btn btn-primary toggleBtn">
+              Ver detalles
+          </button>
         `;
 
         const btn = card.querySelector(".toggleBtn");
@@ -146,21 +150,29 @@ if (document.getElementById("catalogo")) {
             const res = await fetch(`http://localhost:8080/api/playlist/${pl.idPlaylist}`);
             const playlistDetails = await res.json();
 
-            // Título del modal
+            // Setear título del modal
             document.getElementById("modalTitle").textContent = playlistDetails.nombre;
 
-            // Canciones en el modal
-            const songsHtml = playlistDetails.canciones && playlistDetails.canciones.length > 0
-              ? playlistDetails.canciones.map(song => `
-                  <div class="cancion">
-                    <p><strong>${song.nombre}</strong> - ${song.artista}</p>
-                  </div>
-                `).join("")
-              : "<p>Esta playlist no tiene canciones.</p>";
+            // Crear canciones con estilo limpio
+            const songsHtml =
+              playlistDetails.canciones?.length > 0
+                ? playlistDetails.canciones
+                    .map(song => `
+                      <div class="cancion" style="
+                        background:#eef4ff;
+                        padding:12px;
+                        border-radius:10px;
+                        margin-bottom:10px;
+                      ">
+                        <strong>${song.nombre}</strong> — ${song.artista}
+                      </div>
+                    `)
+                    .join("")
+                : "<p>Esta playlist no tiene canciones.</p>";
 
             document.getElementById("modalSongs").innerHTML = songsHtml;
 
-            // Mostrar el modal
+            // Mostrar modal
             document.getElementById("playlistModal").style.display = "block";
           } catch (err) {
             console.error("Error al cargar detalles:", err);
@@ -171,13 +183,14 @@ if (document.getElementById("catalogo")) {
       });
 
     } catch (error) {
-      document.getElementById("catalogo").innerText = "Error cargando catálogo: " + error.message;
+      document.getElementById("catalogo").innerText =
+        "Error cargando catálogo: " + error.message;
     }
   }
 
   cargarCatalogo();
 
-  // Lógica para cerrar el modal
+  // Cerrar modal
   document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("playlistModal");
     const closeBtn = document.querySelector(".close");
@@ -187,9 +200,7 @@ if (document.getElementById("catalogo")) {
     });
 
     window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.style.display = "none";
-      }
+      if (e.target === modal) modal.style.display = "none";
     });
   });
 }

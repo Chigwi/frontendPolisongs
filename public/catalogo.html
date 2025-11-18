@@ -9,13 +9,13 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #d7eaff; /* Azul claro suave */
+      background: #d7eaff;
       margin: 0;
       padding: 20px;
       color: #2c3e50;
     }
 
-    /* NAV CORPORATIVO */
+
     nav {
       background: #ffffff;
       border-bottom: 1px solid #dce3eb;
@@ -78,7 +78,7 @@
       height: 160px;
       object-fit: cover;
       border-radius: 12px;
-      background: #eef4ff; /* Fondo si no hay imagen */
+      background: #eef4ff;
     }
 
     .playlist-title {
@@ -88,7 +88,7 @@
       color: #2c3e50;
     }
 
-    /* Espacio opcional para insertar un icono principal */
+
     .image-slot {
       width: 140px;
       height: 140px;
@@ -102,11 +102,140 @@
       font-size: 0.9rem;
       color: #7288a6;
     }
+
+    /* ------------------------- */
+/* ESTILO CORPORATIVO DE BOTONES */
+/* ------------------------- */
+
+.btn {
+  background: #ffffff;
+  color: #2c3e50;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #d0d8e4;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.25s;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: #e9eef5;
+  color: #1a2a33;
+}
+
+/* Botón primario */
+.btn-primary {
+  background: #4a90e2;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #3b7ac4;
+}
+
+
+/* ------------------------- */
+/* ESTILO DEL MODAL */
+/* ------------------------- */
+
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 62, 80, 0.45); /* Oscuro suave */
+  backdrop-filter: blur(4px);
+}
+
+/* Caja del modal */
+.modal-content {
+  background: #ffffff;
+  margin: 8% auto;
+  padding: 25px;
+  width: 90%;
+  max-width: 480px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  animation: fadeIn 0.3s ease;
+  color: #2c3e50;
+  text-align: center;
+}
+
+/* Título */
+.modal-content h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: #1f2d3d;
+}
+
+/* Lista de canciones */
+#modalSongs {
+  margin-top: 10px;
+  text-align: left;
+}
+
+#modalSongs p {
+  background: #eef4ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Botón de cierre */
+.close {
+  float: right;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #6c7a89;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close:hover {
+  color: #2c3e50;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Contenedor scrollable dentro del modal */
+#modalSongs {
+  max-height: 300px;     /* Ajusta según tu preferencia */
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Estilo bonito de scrollbar */
+#modalSongs::-webkit-scrollbar {
+  width: 6px;
+}
+
+#modalSongs::-webkit-scrollbar-thumb {
+  background: #b5c7dd;
+  border-radius: 4px;
+}
+
+#modalSongs::-webkit-scrollbar-track {
+  background: #eef4ff;
+}
+
   </style>
 </head>
 
 <body>
-  <!-- NAV -->
+
   <nav>
     <a href="home.html">Home</a>
     <a href="login.html">Login</a>
@@ -114,24 +243,27 @@
     <a href="catalogo.html">Playlists</a>
   </nav>
 
-  <!-- Logo o ícono superior -->
-  <div class="image-slot"> <img src="img/Polisongs.png" alt="Logo" style="width:160px; height:auto;border-radius: 12px;"></div>
+  <div class="image-slot">
+    <img src="img/Polisongs.png" alt="Logo" style="width:160px; height:auto; border-radius: 12px;">
+  </div>
 
   <h1>Catálogo de Playlists</h1>
 
-  <!-- Contenedor dinámico para playlists -->
+
   <div id="catalogo" class="catalogo"></div>
 
-  <!-- Modal para detalles de playlist -->
+
   <div id="playlistModal" class="modal">
-  <div class="modal-content">
+    <div class="modal-content">
       <span class="close">&times;</span>
       <h2 id="modalTitle">Detalles de la Playlist</h2>
       <div id="modalSongs"></div>
     </div>
   </div>
   
-  <script src="./script.js"></script>
+  <script src="script.js"></script>
+
 </body>
 
 </html>
+
