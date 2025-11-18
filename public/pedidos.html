@@ -2,16 +2,104 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Pedidos</title>
+
+    <!-- TIPOGRAFÍA -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
+        /* ====== ESTILO GENERAL ====== */
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, #edf1ff, #f8efff);
+            color: #2c2c35;
+        }
+
+        /* NAV */
+        nav {
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #dce3eb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-radius: 0 0 12px 12px;
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            background: #e7ecff;
+            color: #1f1f24;
+        }
+
+        /* ======= TÍTULO ======= */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(90deg, #5e60ce, #4361ee);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* ======= CONTENEDOR ======= */
+        #contenedor-pedidos {
+            width: 90%;
+            margin: 0 auto;
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid #d8dffc;
+            box-shadow: 0 6px 18px rgba(100, 83, 255, 0.18);
+        }
+
+        /* ======= TABLA ======= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #eef0ff;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #d6dbff;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e7e7f3;
+            color: #444;
+        }
+
+        tr:hover {
+            background: #f7f8ff;
+        }
+
     </style>
 </head>
+
 <body>
+
+    <!-- NAV -->
     <nav>
         <a href="home.html">Home</a>
         <a href="login.html">Login</a>
@@ -20,7 +108,12 @@
     </nav>
 
     <h1>Historial de Pedidos</h1>
-    <div id="contenedor-pedidos"></div>
+
+    <div id="contenedor-pedidos">
+        <!-- La tabla será insertada aquí con JavaScript -->
+    </div>
+
     <script src="script.js"></script>
+
 </body>
 </html>
