@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Usuario</title>
+
+    <!-- Tipografía -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8ecff);
+            color: #2f2f3b;
+        }
+
+        /* NAV */
+        nav {
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #dce3eb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-radius: 0 0 12px 12px;
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            background: #e7ecff;
+            color: #1f1f24;
+        }
+
+        /* Título */
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: 800;
+            background: linear-gradient(90deg, #5e60ce, #4361ee);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+        }
+
+        /* Contenedor principal */
+        .perfil-container {
+            width: 90%;
+            margin: auto;
+            background: #ffffffcc;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #d8dffc;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 6px 18px rgba(100, 83, 255, 0.18);
+        }
+
+        /* Sección de usuario */
+        .user-info {
+            font-size: 1em;
+            margin-bottom: 25px;
+        }
+
+        .user-info p {
+            margin: 6px 0;
+        }
+
+        /* Botones de secciones */
+        .section-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #5e60ce;
+            color: white;
+            transition: 0.25s;
+        }
+
+        .section-buttons button:hover {
+            background: #4648c9;
+        }
+
+        .section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #eef0ff;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #d6dbff;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e7e7f3;
+        }
+
+        tr:hover {
+            background: #f7f8ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="songs.html">Songs</a>
+        <a href="catalogo.html">Playlists</a>
+        <a href="login.html">Logout</a>
+    </nav>
+
+    <h1>Perfil del Usuario</h1>
+
+    <div class="perfil-container">
+
+        <!-- DATOS DEL USUARIO -->
+        <div class="user-info" id="user-info">
+            <h2>Datos del Usuario</h2>
+            <p><strong>Nombre:</strong> Cargando...</p>
+            <p><strong>Email:</strong> Cargando...</p>
+            <p><strong>Rol:</strong> Cargando...</p>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="section-buttons">
+            <button onclick="mostrarSeccion('canciones')">Mis Canciones</button>
+            <button onclick="mostrarSeccion('playlists')">Mis Playlists</button>
+            <button onclick="mostrarSeccion('pedidos')">Mis Pedidos</button>
+        </div>
+
+        <!-- SECCIÓN: CANCIONES -->
+        <div id="canciones" class="section">
+            <h2>Mis Canciones</h2>
+            <div id="mis-canciones"></div>
+        </div>
+
+        <!-- SECCIÓN: PLAYLISTS -->
+        <div id="playlists" class="section">
+            <h2>Mis Playlists</h2>
+            <div id="mis-playlists"></div>
+        </div>
+
+        <!-- SECCIÓN: PEDIDOS -->
+        <div id="pedidos" class="section">
+            <h2>Mis Pedidos</h2>
+            <div id="mis-pedidos"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+   
+
+</body>
+</html>
