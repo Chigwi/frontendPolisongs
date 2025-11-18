@@ -124,35 +124,74 @@ if (document.getElementById("songsContainer")) {
 //  CATÁLOGO DE PLAYLISTS
 // ===========================
 if (document.getElementById("catalogo")) {
+  async function cargarCatalogo() {
+    try {
+      const response = await fetch("http://localhost:8080/api/playlist");
+      const playlists = await response.json();
 
-    async function cargarCatalogo() {
-        try {
-            const response = await fetch("http://localhost:8080/api/playlist");
-            const playlists = await response.json();
+      const contenedor = document.getElementById("catalogo");
+      contenedor.innerHTML = "";
 
-            const contenedor = document.getElementById("catalogo");
-            contenedor.innerHTML = "";
+      playlists.forEach(pl => {
+        const card = document.createElement("div");
+        card.className = "playlist-card";
 
-            playlists.forEach(pl => {
-                const card = document.createElement("div");
-                card.className = "playlist-card";
+        card.innerHTML = `
+          <img src="img/disco.jpg" alt="${pl.nombre}">
+          <h3>${pl.nombre}</h3>
 
-                card.innerHTML = `
-                    <img src="img/disco.jpg" alt="${pl.nombre}">
-                    <h3>${pl.nombre}</h3>
-                    <button onclick="playSong('${pl.nombre.replace(/'/g, "\\'")}')">Play</button>
-                    
-                `;
+          <div class="playlist-details" style="display:none;">
+            <div class="songs-list">Cargando canciones...</div>
+          </div>
 
-                contenedor.appendChild(card);
-            });
+          <button class="toggleBtn">Ver detalles</button>
+        `;
 
-        } catch (error) {
-            showOutput("Error cargando catálogo: " + error.message);
-        }
+        const btn = card.querySelector(".toggleBtn");
+        const details = card.querySelector(".playlist-details");
+        const songsList = card.querySelector(".songs-list");
+
+        btn.addEventListener("click", async () => {
+          const visible = details.style.display === "block";
+
+          if (!visible) {
+            // Solo cargar canciones si aún no se han cargado
+            if (!card.dataset.loaded) {
+              try {
+                const res = await fetch(`http://localhost:8080/api/playlist/${pl.idPlaylist}`);
+                const playlistDetails = await res.json();
+
+                if (playlistDetails.canciones && playlistDetails.canciones.length > 0) {
+                  songsList.innerHTML = playlistDetails.canciones.map(song => `
+                    <div class="cancion">
+                      <p><strong>${song.nombre}</strong> - ${song.artista}</p>
+                      <p>Artista: ${song.artista} | Formato: ${song.formato.nombre}</p>
+                    </div>
+                  `).join("");
+                } else {
+                  songsList.innerHTML = "<p>Esta playlist no tiene canciones.</p>";
+                }
+
+                card.dataset.loaded = "true";
+              } catch (err) {
+                songsList.innerHTML = "<p>Error al cargar canciones.</p>";
+              }
+            }
+          }
+
+          details.style.display = visible ? "none" : "block";
+          btn.textContent = visible ? "Ver detalles" : "Ocultar detalles";
+        });
+
+        contenedor.appendChild(card);
+      });
+
+    } catch (error) {
+      document.getElementById("catalogo").innerText = "Error cargando catálogo: " + error.message;
     }
+  }
 
-   cargarCatalogo();
+  cargarCatalogo();
 }
 
 
