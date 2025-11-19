@@ -127,6 +127,9 @@ if (document.getElementById("songsContainer")) {
 
 //CATALOGO//
 
+ const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga
+
 if (document.getElementById("catalogo")) {
   async function cargarCatalogo() {
     try {
@@ -192,6 +195,9 @@ if (document.getElementById("catalogo")) {
       document.getElementById("catalogo").innerText =
         "Error cargando catálogo: " + error.message;
     }
+    finally {
+        loader.style.display = "none";  // Ocultar pantalla de carga
+    }
   }
 
   cargarCatalogo();
@@ -217,7 +223,11 @@ if (document.getElementById("catalogo")) {
 //  HISTORIAL DE PEDIDOS
 // ===========================
 
+
+
 if (document.getElementById("contenedor-pedidos")) {
+     const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga
     const credentials = sessionStorage.getItem('auth');
 
     if (!credentials) {
@@ -238,6 +248,7 @@ if (document.getElementById("contenedor-pedidos")) {
         })
         .then(pedidos => {
             mostrarPedidos(pedidos);
+            loader.style.display = "none";  // Ocultar pantalla de carga
         })
         .catch(error => {
             console.error("Error:", error);
