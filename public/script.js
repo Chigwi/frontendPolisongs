@@ -285,7 +285,7 @@ if (document.getElementById("usuarios")){
 // Al cargar la página, obtenemos los datos del usuario autenticado desde la API
 async function cargarDatosUsuario() {
     try {
-        const response = await fetch("http://localhost:8080/api/usuarios/", {
+        const response = await fetch("http://localhost:8080/api/usuarios/user/{nombreUsuario}", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -335,7 +335,7 @@ function mostrarSeccion(seccionId) {
 // Ejemplo: obtener canciones del usuario desde la API con Basic Auth
 async function cargarCanciones() {
     try {
-        const response = await fetch("https://tu-api.com/api/canciones", {
+        const response = await fetch("http://localhost:8080/api/usuarios/misCanciones", {
             headers: {
                 "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
             }
@@ -356,7 +356,7 @@ async function cargarCanciones() {
 
 async function cargarPlaylists() {
     try {
-        const response = await fetch("https://tu-api.com/api/playlists", {
+        const response = await fetch("http://localhost:8080/api/usuarios/misPlaylist", {
             headers: {
                 "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
             }
@@ -377,7 +377,7 @@ async function cargarPlaylists() {
 
 async function cargarPedidos() {
     try {
-        const response = await fetch("https://tu-api.com/api/pedidos", {
+        const response = await fetch("http://localhost:8080/api/usuarios/misPedidos", {
             headers: {
                 "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
             }
