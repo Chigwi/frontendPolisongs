@@ -256,6 +256,135 @@ if (document.getElementById("contenedor-pedidos")) {
     }
 }
 
+// ===========================
+//  PANTALLA DE USUARIO
+// ===========================
+
+if (document.getElementById("usuarios")){
+  // script.js
+
+// Función para codificar credenciales en Base64
+function encodeBasicAuth(user, password) {
+    return btoa(`${user}:${password}`);
+}
+
+// Al cargar la página, obtenemos los datos del usuario autenticado desde la API
+async function cargarDatosUsuario() {
+    try {
+        const response = await fetch("https://tu-api.com/api/usuario", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+            }
+        });
+
+        if (!response.ok) throw new Error("Error al obtener datos del usuario");
+
+        const usuario = await response.json();
+
+        // Renderizamos los datos en el perfil
+        const userInfo = document.getElementById("user-info");
+        userInfo.innerHTML = `
+            <h2>Datos del Usuario</h2>
+            <p><strong>Nombre:</strong> ${usuario.nombre}</p>
+            <p><strong>Email:</strong> ${usuario.email}</p>
+            <p><strong>Rol:</strong> ${usuario.rol}</p>
+        `;
+
+        // Guardamos los datos para usarlos en otras secciones
+        window.usuario = usuario;
+
+    } catch (error) {
+        console.error(error);
+        alert("No se pudieron cargar los datos del usuario");
+    }
+}
+
+// Mostrar secciones según el botón
+function mostrarSeccion(seccionId) {
+    const secciones = document.querySelectorAll(".section");
+    secciones.forEach(sec => sec.style.display = "none");
+
+    const seccion = document.getElementById(seccionId);
+    seccion.style.display = "block";
+
+    if (seccionId === "canciones") {
+        cargarCanciones();
+    } else if (seccionId === "playlists") {
+        cargarPlaylists();
+    } else if (seccionId === "pedidos") {
+        cargarPedidos();
+    }
+}
+
+// Ejemplo: obtener canciones del usuario desde la API con Basic Auth
+async function cargarCanciones() {
+    try {
+        const response = await fetch("https://tu-api.com/api/canciones", {
+            headers: {
+                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+            }
+        });
+        const canciones = await response.json();
+
+        const contenedor = document.getElementById("mis-canciones");
+        contenedor.innerHTML = `
+            <table>
+                <tr><th>Título</th><th>Artista</th></tr>
+                ${canciones.map(c => `<tr><td>${c.titulo}</td><td>${c.artista}</td></tr>`).join("")}
+            </table>
+        `;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function cargarPlaylists() {
+    try {
+        const response = await fetch("https://tu-api.com/api/playlists", {
+            headers: {
+                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+            }
+        });
+        const playlists = await response.json();
+
+        const contenedor = document.getElementById("mis-playlists");
+        contenedor.innerHTML = `
+            <table>
+                <tr><th>Nombre</th><th>Número de Canciones</th></tr>
+                ${playlists.map(p => `<tr><td>${p.nombre}</td><td>${p.canciones}</td></tr>`).join("")}
+            </table>
+        `;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function cargarPedidos() {
+    try {
+        const response = await fetch("https://tu-api.com/api/pedidos", {
+            headers: {
+                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+            }
+        });
+        const pedidos = await response.json();
+
+        const contenedor = document.getElementById("mis-pedidos");
+        contenedor.innerHTML = `
+            <table>
+                <tr><th>ID</th><th>Producto</th><th>Estado</th></tr>
+                ${pedidos.map(p => `<tr><td>${p.id}</td><td>${p.producto}</td><td>${p.estado}</td></tr>`).join("")}
+            </table>
+        `;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// Inicializar
+window.onload = cargarDatosUsuario;
+}
 
 /*
 // Screen switching
