@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===========================
 if (document.getElementById("songsContainer")) {
 
+    const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga
+
     async function displaySongs() {
         try {
             const response = await fetch("http://localhost:8080/api/canciones");
@@ -114,6 +117,9 @@ if (document.getElementById("songsContainer")) {
             document.getElementById("songsContainer").innerText =
                 "Error: " + error.message;
         }
+         finally {
+        loader.style.display = "none";  // Ocultar pantalla de carga
+    }
     }
 
     displaySongs();
