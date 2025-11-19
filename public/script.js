@@ -260,9 +260,8 @@ if (document.getElementById("contenedor-pedidos")) {
 //  PANTALLA DE USUARIO
 // ===========================
 
-if (document.getElementById("usuarios")){
-  // script.js
 
+if (document.getElementById("usuarios")){
 // Función para codificar credenciales en Base64
 function encodeBasicAuth(user, password) {
     return btoa(`${user}:${password}`);
