@@ -263,18 +263,16 @@ if (document.getElementById("contenedor-pedidos")) {
 
 if (document.getElementById("usuarios")){
 // Función para codificar credenciales en Base64
-function encodeBasicAuth(user, password) {
-    return btoa(`${user}:${password}`);
-}
+    const credentials = sessionStorage.getItem('auth');
 
 // Al cargar la página, obtenemos los datos del usuario autenticado desde la API
 async function cargarDatosUsuario() {
     try {
-        const response = await fetch("https://tu-api.com/api/usuario", {
+        const response = await fetch("http://localhost:8080/api/usuarios/", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+                "Authorization": `Basic ${credentials}`
             }
         });
 
