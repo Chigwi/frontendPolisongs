@@ -41,20 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para mostrar/ocultar enlaces
     const toggleNavLinks = () => {
-        // Ocultar todos los enlaces autenticados por defecto
-        document.querySelectorAll('.nav-link.auth-required').forEach(link => link.style.display = 'none');
-        document.querySelectorAll('.nav-link.basic-required').forEach(link => link.style.display = 'none');
-        document.querySelectorAll('.nav-link.super-required').forEach(link => link.style.display = 'none');
+        // Ocultar todos los enlaces por defecto
+        document.querySelectorAll('.nav-link').forEach(link => link.style.display = 'none');
 
         if (!isAuthenticated) {
-            // Solo mostrar enlaces públicos
-            document.querySelectorAll('.nav-link.public').forEach(link => link.style.display = 'inline-block');
+            // Mostrar enlaces públicos y solo para no autenticados (como Login)
+            document.querySelectorAll('.nav-link.public, .nav-link.unauth-only').forEach(link => link.style.display = 'inline-block');
         } else if (isBasicUser) {
-            // Mostrar enlaces para basicusuario
+            // Mostrar enlaces públicos + requeridos para basicusuario
             document.querySelectorAll('.nav-link.public, .nav-link.basic-required').forEach(link => link.style.display = 'inline-block');
         } else if (isSuperUser) {
-            // Mostrar todos los enlaces
-            document.querySelectorAll('.nav-link').forEach(link => link.style.display = 'inline-block');
+            // Mostrar enlaces públicos + requeridos para basicusuario + superusuario
+            document.querySelectorAll('.nav-link.public, .nav-link.basic-required, .nav-link.super-required').forEach(link => link.style.display = 'inline-block');
         }
     };
 
