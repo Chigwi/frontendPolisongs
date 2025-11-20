@@ -46,7 +46,6 @@ if (document.getElementById("fetchData")) {
 }
 
 
-
 // ===========================
 // LOGIN PAGE
 // ===========================
@@ -60,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const credentials = btoa(`${username}:${password}`);
 
       try {
-        const res = await fetch('http://localhost:8080/api/pedidos', {
+        // Fetch user data to validate credentials (replace with your endpoint)
+        const res = await fetch(`http://localhost:8080/api/usuarios/user/${username}`, {
           method: 'GET',
           headers: {
             'Authorization': `Basic ${credentials}`
@@ -68,10 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (res.ok) {
+          // Login successful - store credentials and redirect
           sessionStorage.setItem('auth', credentials);
-          window.location.href = '/usuario.html';
+          window.location.href = '/usuario.html';  // Adjust path if needed
+        } else if (res.status === 401 || res.status === 403) {
+          alert('Credenciales incorrectas o usuario no autorizado');
+        } else if (res.status === 404) {
+          alert('Usuario no encontrado');
         } else {
-          alert('Credenciales incorrectas');
+          alert('Error del servidor: ' + res.status);
         }
       } catch (err) {
         alert('Error de conexión con el servidor');
@@ -456,10 +461,6 @@ if (document.getElementById("contenedor-pedidos")) {
 }
 // SCRIPT PARA REGISTRO DE USUARIO
 if (document.getElementById("form-container")) {
-
-    console.log("SCRIPT CARGADO");
-alert("Script cargado");
-
 
     const form = document.getElementById("registro-form");
 
