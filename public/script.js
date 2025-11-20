@@ -171,27 +171,34 @@ if (document.getElementById("perfil-container")) {
         }
     }
 
-    async function cargarPlaylists() {
-        try {
-            const response = await fetch("http://localhost:8080/api/usuarios/misPlaylist", {
-                headers: {
-                    "Authorization": `Basic ${credentials}`
-                }
-            });
-            const playlists = await response.json();
-
-            const contenedor = document.getElementById("mis-playlists");
-            contenedor.innerHTML = `
-                <table>
-                    <tr><th>Nombre</th><th>formato</th></tr>
-                    ${playlists.map(p => `<tr><td>${p.nombre}</td><td>${p.formato.nombre}</td></tr>`).join("")}
-                </table>
-            `;
-        } catch (error) {
-            console.error(error);
-        }
-        
+async function cargarPlaylists() {
+    try {
+        const response = await fetch("http://localhost:8080/api/usuarios/misPlaylist", {
+            headers: {
+                "Authorization":  `Basic ${credentials}` // Update to use session credentials if needed
+            }
+        });
+        const playlists = await response.json();
+        const contenedor = document.getElementById("mis-playlists");
+        contenedor.innerHTML = `
+            <table>
+                <tr><th>Nombre de Playlist</th><th>Canciones</th></tr>
+                ${playlists.map(p => {
+                    // Build a list of song titles from the p.canciones array
+                    const cancionesList = p.canciones && p.canciones.length > 0 
+                        ? p.canciones.map(c => `--> ${c.nombre} (por ${c.artista || 'Desconocido'})`).join('<br>')  // Join with line breaks for readability
+                        : 'No hay canciones en esta playlist';
+                    
+                    return `<tr><td>${p.nombre}</td><td>${cancionesList}</td></tr>`;
+                }).join("")}
+            </table>
+        `;
+    } catch (error) {
+        console.error("Error loading playlists:", error);
+        // Optional: Display an error message in the container
+        document.getElementById("mis-playlists").innerHTML = "<p>Error al cargar playlists.</p>";
     }
+}
     async function cargarPedidos() {
       try {
         const response = await fetch("http://localhost:8080/api/usuarios/misPedidos", {
@@ -214,9 +221,9 @@ if (document.getElementById("perfil-container")) {
 
             <table>
 
-                <tr><th>ID</th><th>Producto</th><th>Estado</th></tr>
+                <tr><th>ID</th><th>Empresa de envios</th><th>Fecha de compra</th></tr>
 
-                ${pedidos.map(p => `<tr><td>${p.id}</td><td>${p.producto}</td><td>${p.estado}</td></tr>`).join("")}
+                ${pedidos.map(p => `<tr><td>${p.idPedido}</td><td>${p.envio.empresaEnvios}</td><td>${p.fecha}</td></tr>`).join("")}
 
             </table>
 
@@ -449,49 +456,3 @@ if (document.getElementById("contenedor-pedidos")) {
 }
 
 
-/*
-// Screen switching
-document.getElementById('homeBtn').addEventListener('click', () => showScreen('homeScreen'));
-document.getElementById('loginBtn').addEventListener('click', () => showScreen('loginScreen'));
-document.getElementById('dashboardBtn').addEventListener('click', () => showScreen('dashboardScreen'));
-
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById(screenId).style.display = 'block';
-}
-
-// Login example (connect to backend)
-document.getElementById('loginSubmit').addEventListener('click', async () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    try {
-        const response = await fetch('http://localhost:8080/api/usuarios', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const result = await response.json();
-        document.getElementById('loginOutput').innerText = result.message || 'Login successful!';
-        // On success, switch to dashboard
-        if (response.ok) showScreen('dashboardScreen');
-    } catch (error) {
-        document.getElementById('loginOutput').innerText = 'Error: ' + error.message;
-    }
-});
-
-document.getElementById('fetchData').addEventListener('click', async () => {
-    try {
-        // Replace with your actual Spring Boot endpoint (e.g., http://localhost:8080/api/users)
-        const response = await fetch('http://localhost:8080/api/playlist');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        console.log('Data from backend:', data);
-        // Display data on the page (e.g., update #output div)
-        document.getElementById('output').innerText = JSON.stringify(data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        document.getElementById('output').innerText = 'Error: ' + error.message;
-    }
-});
-
-// Existing fetch code for home screen...*/
