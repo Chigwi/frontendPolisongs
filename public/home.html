@@ -118,20 +118,28 @@
         font-size: 0.9rem;
         color: #7288a6;
     }
+    .nav-link {
+    display: inline-block;  /* Por defecto visible */
+}
+.nav-link[style*="display: none"] {
+    display: none !important;  /* Forzar oculto */
+}
 </style>
 
 <body>
 
-    <!-- NAV -->
-    <nav>
-        <a href="home.html">Home</a>
-        <a href="login.html">Login</a>
-        <a href="songs.html">Songs</a>
-        <a href="catalogo.html">Playlists</a>
-        <a href="pedidos.html">Pedidos</a>
-        <a href="usuario.html">Usuario</a>
-        <a href="registro.html">registro</a>
-    </nav>
+
+<!-- NAV -->
+<nav>
+    <a href="login.html" class="nav-link public">Login</a>
+    <a href="songs.html" class="nav-link public">Songs</a>
+    <a href="catalogo.html" class="nav-link public">Playlists</a>
+    <a href="ventaCanciones.html" class="nav-link auth-required basic-required">ventaCanciones</a>
+    <a href="usuario.html" class="nav-link auth-required basic-required">Usuario</a>
+    <a href="pedidos.html" class="nav-link auth-required super-required">Pedidos</a>
+    <a href="#" onclick="logout(); return false;" class="nav-link auth-required basic-required">Logout</a>
+    <!-- Ocultar Home ya que es la página actual, o agrégalo si quieres -->
+</nav>
 
     <!-- HERO -->
     <div class="hero">

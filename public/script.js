@@ -29,22 +29,51 @@ function showOutput(message) {
 
 
 // ===========================
-//  HOME PAGE (fetchData)
+//  HOME PAGE (fetchData and nav logic)
 // ===========================
-if (document.getElementById("fetchData")) {
-     console.log("Script loaded. Title is:", document.title);
-    document.getElementById("fetchData").addEventListener("click", async () => {
-         
-        try {
-            const response = await fetch("http://localhost:8080/api/playlist");
-            const data = await response.json();
-            showOutput(JSON.stringify(data, null, 2));
-        } catch (error) {
-            showOutput("Error: " + error.message);
-        }
-    });
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // Lógica para navegación condicional
+    const auth = sessionStorage.getItem('auth');
+    const userRole = sessionStorage.getItem('userRole');
+    const isAuthenticated = !!auth;
+    const isBasicUser = isAuthenticated && userRole === 'basicusuario';
+    const isSuperUser = isAuthenticated && userRole === 'superusuario';
 
+    // Función para mostrar/ocultar enlaces
+    const toggleNavLinks = () => {
+        // Ocultar todos los enlaces autenticados por defecto
+        document.querySelectorAll('.nav-link.auth-required').forEach(link => link.style.display = 'none');
+        document.querySelectorAll('.nav-link.basic-required').forEach(link => link.style.display = 'none');
+        document.querySelectorAll('.nav-link.super-required').forEach(link => link.style.display = 'none');
+
+        if (!isAuthenticated) {
+            // Solo mostrar enlaces públicos
+            document.querySelectorAll('.nav-link.public').forEach(link => link.style.display = 'inline-block');
+        } else if (isBasicUser) {
+            // Mostrar enlaces para basicusuario
+            document.querySelectorAll('.nav-link.public, .nav-link.basic-required').forEach(link => link.style.display = 'inline-block');
+        } else if (isSuperUser) {
+            // Mostrar todos los enlaces
+            document.querySelectorAll('.nav-link').forEach(link => link.style.display = 'inline-block');
+        }
+    };
+
+    toggleNavLinks();  // Ejecutar al cargar
+
+    // Lógica existente para fetchData
+    if (document.getElementById("fetchData")) {
+        console.log("Script loaded. Title is:", document.title);
+        document.getElementById("fetchData").addEventListener("click", async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/playlist");
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput("Error: " + error.message);
+            }
+        });
+    }
+});
 
 // ===========================
 // LOGIN PAGE
@@ -59,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const credentials = btoa(`${username}:${password}`);
 
       try {
-        // Fetch user data to validate credentials (replace with your endpoint)
+        // Fetch user data to validate credentials and get role
         const res = await fetch(`http://localhost:8080/api/usuarios/user/${username}`, {
           method: 'GET',
           headers: {
@@ -68,8 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (res.ok) {
-          // Login successful - store credentials and redirect
+          const userData = await res.json();  // Asumiendo que devuelve el objeto usuario
+          const userRole = userData.rol.nombre || userData.tipoUsuario || 'basicusuario';  // Ajusta según tu backend (e.g., campo 'rol')
+
+          // Login successful - store credentials and role
           sessionStorage.setItem('auth', credentials);
+          sessionStorage.setItem('userRole', userRole);  // Almacenar rol para navegación
           window.location.href = '/usuario.html';  // Adjust path if needed
         } else if (res.status === 401 || res.status === 403) {
           alert('Credenciales incorrectas o usuario no autorizado');
@@ -85,6 +118,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// ===========================
+// LOGOUT METHOD
+// ===========================
+async function logout() {
+    // Clear the auth credentials from sessionStorage
+    sessionStorage.removeItem('auth');
+    
+    // Optional: Clear any other session data (e.g., user info)
+    sessionStorage.clear();  // Or remove specific items if you store more
+    
+    // Redirect to the login page
+    window.location.href = '/login.html';  // Adjust to your login page path (e.g., 'login.html' or '/')
+    
+    // Optional: Prevent back button from accessing the user page
+    // history.pushState(null, null, window.location.href);
+    // window.onpopstate = () => { window.location.href = '/login.html'; };
+}
 
 // ===========================
 //  PANTALLA DE USUARIO
@@ -309,6 +360,84 @@ if (document.getElementById("songsContainer")) {
     }
 
     displaySongs();
+}
+// ===========================
+//  VENTA CANCIONES
+// ===========================
+if (document.getElementById("form-card-cancion")) {
+    const form = document.getElementById("form-card-cancion");
+    const loader = document.getElementById("loader");  // Asumiendo que tienes un loader global
+
+    // Definir crearCancion como función global para compatibilidad con onclick (si lo usas)
+    window.crearCancion = async function(event) {
+        if (event) event.preventDefault();  // Prevenir envío si viene de un form submit
+
+        // Obtener credenciales (asumiendo que están en localStorage tras login)
+        const credentials = sessionStorage.getItem('auth');
+
+        if (!credentials) {
+            alert("Debes iniciar sesión primero.");
+            return;  // No proceder si no hay credenciales
+        }
+
+        // Crear el objeto canción (igual que antes)
+        const cancion = {
+            nombre: document.getElementById("nombre").value,
+            artista: document.getElementById("artista").value,
+            annoPublicacion: document.getElementById("año").value,
+            precio: 5000,
+            formato: {
+                nombre: "Digital",
+                cantidad: parseInt(document.getElementById("formatoCantidad").value)
+            }
+        };
+
+        // Mostrar loader mientras se envía
+        if (loader) loader.style.display = "flex";
+
+        try {
+
+            // Enviar POST al backend con autenticación
+            const response = await fetch("http://localhost:8080/api/canciones", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${credentials}` // Header para Basic Auth
+                },
+                credentials: 'include',  // Incluir cookies para sesiones (omite si no usas cookies)
+                body: JSON.stringify(cancion)
+            });
+
+            if (response.ok) {
+                // Éxito: mostrar mensaje y recargar la lista si existe
+                alert("Canción creada exitosamente!");
+                document.getElementById("preview").style.display = "none";  // Ocultar preview
+                // Recargar la lista de canciones si estamos en la página de songs
+                if (document.getElementById("songsContainer")) {
+                    displaySongs();  // Llamar a la función de displaySongs para actualizar
+                }
+            } else if (response.status === 401) {
+                // Error de autenticación
+                alert("Autenticación fallida. Inicia sesión nuevamente.");
+                // Opcional: redirigir a página de login
+            } else {
+                // Otro error del servidor
+                const errorData = await response.json();
+                alert("Error al crear la canción: " + (errorData.message || response.statusText));
+            }
+        } catch (error) {
+            // Error de red o fetch
+            alert("Error de conexión: " + error.message);
+        } finally {
+            // Ocultar loader
+            if (loader) loader.style.display = "none";
+        }
+
+        console.log("Objeto creado:", cancion);  // Mantener el log para debug
+    };
+
+    // Agregar event listener al formulario para manejar el submit (recomendado)
+    form.addEventListener("submit", crearCancion);
 }
 
 //CATALOGO//
