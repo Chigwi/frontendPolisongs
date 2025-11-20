@@ -454,5 +454,80 @@ if (document.getElementById("contenedor-pedidos")) {
         }
     }
 }
+// SCRIPT PARA REGISTRO DE USUARIO
+if (document.getElementById("form-container")) {
+
+    console.log("SCRIPT CARGADO");
+alert("Script cargado");
 
 
+    const form = document.getElementById("registro-form");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Obtener valores del formulario
+        const nombreUsuario = document.getElementById("nombreUsuario").value;
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const contrasenna = document.getElementById("contrasenna").value;
+        const tipoID = document.getElementById("tipoID").value;
+        const direccion = document.getElementById("direccion").value;
+        const telefono = document.getElementById("telefono").value;
+        const codigoNacion = document.getElementById("codigoNacion").value;
+        const correo = document.getElementById("correo").value;
+
+        const nuevoUsuario = {
+            nombreUsuario,
+            nombre,
+            apellido,
+            contrasenna,
+            tipoID,
+            direccion,
+            telefono: {
+                numero: telefono,
+                codigoNacion
+            },
+            correo: {
+                direccion: correo
+            },
+            canciones: [],
+            playlists: [],
+            pedidos: []
+        };
+
+        console.log("Enviando usuario:", nuevoUsuario);
+
+        try {
+            const response = await fetch("http://localhost:8080/api/usuarios/crearusuarios", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(nuevoUsuario)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                alert("Error al registrar usuario:\n" + errorText);
+                return;
+            }
+
+           const data = await response.text();
+console.log("Respuesta del servidor:", data);
+
+
+            // Guardar credenciales
+            const base64Credentials = btoa(`${nombreUsuario}:${contrasenna}`);
+            sessionStorage.setItem("auth", base64Credentials);
+
+            alert("Registro exitoso. ¡Bienvenido!");
+
+            window.location.href = "login.html";
+
+        } catch (error) {
+            console.error("Error durante el registro:", error);
+            alert("No se pudo registrar el usuario (error en la petición).");
+        }
+    });
+}
