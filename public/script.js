@@ -6,13 +6,35 @@ function showOutput(message) {
     if (output) output.innerText = message;
 }
 
+    async function cargarPedidos() {
+        try {
+            const response = await fetch("http://localhost:8080/api/usuarios/misPedidos", {
+                headers: {
+                    "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
+                }
+            });
+            const pedidos = await response.json();
+
+            const contenedor = document.getElementById("mis-pedidos");
+            contenedor.innerHTML = `
+                <table>
+                    <tr><th>ID</th><th>Producto</th><th>Estado</th></tr>
+                    ${pedidos.map(p => `<tr><td>${p.id}</td><td>${p.producto}</td><td>${p.estado}</td></tr>`).join("")}
+                </table>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
 
 // ===========================
 //  HOME PAGE (fetchData)
 // ===========================
 if (document.getElementById("fetchData")) {
+     console.log("Script loaded. Title is:", document.title);
     document.getElementById("fetchData").addEventListener("click", async () => {
+         
         try {
             const response = await fetch("http://localhost:8080/api/playlist");
             const data = await response.json();
@@ -47,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.ok) {
           sessionStorage.setItem('auth', credentials);
-          alert('Credenciales correctas');
-          window.location.href = '/pedidos.html';
+          window.location.href = '/usuario.html';
         } else {
           alert('Credenciales incorrectas');
         }
@@ -59,6 +80,159 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// ===========================
+//  PANTALLA DE USUARIO
+// ===========================
+
+if (document.getElementById("perfil-container")) {
+   // Retrieve and decode the Base64 credentials from sessionStorage (moved inside for scoping)
+    const credentials = sessionStorage.getItem('auth');
+    if (!credentials) {
+        throw new Error("No se encontraron credenciales en la sesión");
+    }
+    
+    // Decode the Base64 string to get "username:password"
+    const decoded = atob(credentials);
+    const [username, password] = decoded.split(':');  // Extract username (first part)
+    
+    // Build the dynamic URL with the extracted username
+    const url = `http://localhost:8080/api/usuarios/user/${username}`;
+
+    // Al cargar la página, obtenemos los datos del usuario autenticado desde la API
+    async function cargarDatosUsuario() {
+
+        try {
+            const response = await fetch(url, {  // Use the dynamic URL here
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Basic ${credentials}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Error al obtener datos del usuario");
+
+            const usuario = await response.json();
+
+            // Renderizamos los datos en el perfil
+            const userInfo = document.getElementById("user-info");
+            userInfo.innerHTML = `
+                <h2>Datos del Usuario</h2>
+                <p><strong>Nombre:</strong> ${usuario.nombre}</p>
+                <p><strong>Email:</strong> ${usuario.correo.direccion}</p>
+                <p><strong>Rol:</strong> ${usuario.rol.nombre}</p>
+            `;
+
+            // Guardamos los datos para usarlos en otras secciones
+            window.usuario = usuario;
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Mostrar secciones según el botón
+    function mostrarSeccion(seccionId) {
+        const secciones = document.querySelectorAll(".section");
+        secciones.forEach(sec => sec.style.display = "none");
+
+        const seccion = document.getElementById(seccionId);
+        seccion.style.display = "block";
+
+        if (seccionId === "canciones") {
+            cargarCanciones();
+        } else if (seccionId === "playlists") {
+            cargarPlaylists();
+        } else if (seccionId === "pedidos") {
+            cargarPedidos();
+        }
+    }
+
+    // Ejemplo: obtener canciones del usuario desde la API con Basic Auth
+    async function cargarCanciones() {
+        try {
+            const response = await fetch("http://localhost:8080/api/usuarios/misCanciones", {
+                headers: {
+                    "Authorization": `Basic ${credentials}`
+                }
+            });
+            const canciones = await response.json();
+
+            const contenedor = document.getElementById("mis-canciones");
+            contenedor.innerHTML = `
+                <table>
+                    <tr><th>Título</th><th>Artista</th></tr>
+                    ${canciones.map(c => `<tr><td>${c.nombre}</td><td>${c.artista}</td></tr>`).join("")}
+                </table>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function cargarPlaylists() {
+        try {
+            const response = await fetch("http://localhost:8080/api/usuarios/misPlaylist", {
+                headers: {
+                    "Authorization": `Basic ${credentials}`
+                }
+            });
+            const playlists = await response.json();
+
+            const contenedor = document.getElementById("mis-playlists");
+            contenedor.innerHTML = `
+                <table>
+                    <tr><th>Nombre</th><th>formato</th></tr>
+                    ${playlists.map(p => `<tr><td>${p.nombre}</td><td>${p.formato.nombre}</td></tr>`).join("")}
+                </table>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+        
+    }
+    async function cargarPedidos() {
+      try {
+        const response = await fetch("http://localhost:8080/api/usuarios/misPedidos", {
+
+            headers: {
+
+                "Authorization": `Basic ${credentials}`
+
+            }
+
+        });
+
+        const pedidos = await response.json();
+
+
+
+        const contenedor = document.getElementById("mis-pedidos");
+
+        contenedor.innerHTML = `
+
+            <table>
+
+                <tr><th>ID</th><th>Producto</th><th>Estado</th></tr>
+
+                ${pedidos.map(p => `<tr><td>${p.id}</td><td>${p.producto}</td><td>${p.estado}</td></tr>`).join("")}
+
+            </table>
+
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+cargarDatosUsuario();
+}
+
+   
 
 
 
@@ -127,10 +301,11 @@ if (document.getElementById("songsContainer")) {
 
 //CATALOGO//
 
- const loader = document.getElementById("loader");
-    loader.style.display = "flex";  // Mostrar pantalla de carga
+
 
 if (document.getElementById("catalogo")) {
+   const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga
   async function cargarCatalogo() {
     try {
       const response = await fetch("http://localhost:8080/api/playlist");
@@ -273,132 +448,6 @@ if (document.getElementById("contenedor-pedidos")) {
     }
 }
 
-// ===========================
-//  PANTALLA DE USUARIO
-// ===========================
-
-
-if (document.getElementById("usuarios")){
-// Función para codificar credenciales en Base64
-    const credentials = sessionStorage.getItem('auth');
-
-// Al cargar la página, obtenemos los datos del usuario autenticado desde la API
-async function cargarDatosUsuario() {
-    try {
-        const response = await fetch("http://localhost:8080/api/usuarios/user/{nombreUsuario}", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Basic ${credentials}`
-            }
-        });
-
-        if (!response.ok) throw new Error("Error al obtener datos del usuario");
-
-        const usuario = await response.json();
-
-        // Renderizamos los datos en el perfil
-        const userInfo = document.getElementById("user-info");
-        userInfo.innerHTML = `
-            <h2>Datos del Usuario</h2>
-            <p><strong>Nombre:</strong> ${usuario.nombre}</p>
-            <p><strong>Email:</strong> ${usuario.email}</p>
-            <p><strong>Rol:</strong> ${usuario.rol}</p>
-        `;
-
-        // Guardamos los datos para usarlos en otras secciones
-        window.usuario = usuario;
-
-    } catch (error) {
-        console.error(error);
-        alert("No se pudieron cargar los datos del usuario");
-    }
-}
-
-// Mostrar secciones según el botón
-function mostrarSeccion(seccionId) {
-    const secciones = document.querySelectorAll(".section");
-    secciones.forEach(sec => sec.style.display = "none");
-
-    const seccion = document.getElementById(seccionId);
-    seccion.style.display = "block";
-
-    if (seccionId === "canciones") {
-        cargarCanciones();
-    } else if (seccionId === "playlists") {
-        cargarPlaylists();
-    } else if (seccionId === "pedidos") {
-        cargarPedidos();
-    }
-}
-
-// Ejemplo: obtener canciones del usuario desde la API con Basic Auth
-async function cargarCanciones() {
-    try {
-        const response = await fetch("http://localhost:8080/api/usuarios/misCanciones", {
-            headers: {
-                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
-            }
-        });
-        const canciones = await response.json();
-
-        const contenedor = document.getElementById("mis-canciones");
-        contenedor.innerHTML = `
-            <table>
-                <tr><th>Título</th><th>Artista</th></tr>
-                ${canciones.map(c => `<tr><td>${c.titulo}</td><td>${c.artista}</td></tr>`).join("")}
-            </table>
-        `;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function cargarPlaylists() {
-    try {
-        const response = await fetch("http://localhost:8080/api/usuarios/misPlaylist", {
-            headers: {
-                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
-            }
-        });
-        const playlists = await response.json();
-
-        const contenedor = document.getElementById("mis-playlists");
-        contenedor.innerHTML = `
-            <table>
-                <tr><th>Nombre</th><th>Número de Canciones</th></tr>
-                ${playlists.map(p => `<tr><td>${p.nombre}</td><td>${p.canciones}</td></tr>`).join("")}
-            </table>
-        `;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function cargarPedidos() {
-    try {
-        const response = await fetch("http://localhost:8080/api/usuarios/misPedidos", {
-            headers: {
-                "Authorization": "Basic " + encodeBasicAuth("usuario", "clave123")
-            }
-        });
-        const pedidos = await response.json();
-
-        const contenedor = document.getElementById("mis-pedidos");
-        contenedor.innerHTML = `
-            <table>
-                <tr><th>ID</th><th>Producto</th><th>Estado</th></tr>
-                ${pedidos.map(p => `<tr><td>${p.id}</td><td>${p.producto}</td><td>${p.estado}</td></tr>`).join("")}
-            </table>
-        `;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-// Inicializar
-window.onload = cargarDatosUsuario;
-}
 
 /*
 // Screen switching
