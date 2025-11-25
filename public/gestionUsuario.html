@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - PoliSongStock</title>
+
+    <!-- Tipografía -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #d7eaff;
+            color: #2c3e50;
+            padding-bottom: 40px;
+        }
+
+        /* NAV CORPORATIVO */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid #dce3eb;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 6px;
+            transition: 0.25s;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            background: #e9eef5;
+            color: #1a2a33;
+        }
+
+        /* TÍTULO */
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #1f2d3d;
+        }
+
+        /* CONTENEDOR */
+        #contenedor-usuarios {
+            width: 85%;
+            margin: 35px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #dce3eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* TABLA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #eef3ff;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #d6dbff;
+            color: #2c3e50;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e4e8f3;
+            color: #445066;
+        }
+
+        tr:hover {
+            background: #f5f8ff;
+        }
+
+        /* LOADER */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #bcd4ff;
+            border-top: 6px solid #1f2d3d;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #loader p {
+            font-size: 1.1rem;
+            color: #1f2d3d;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="songs.html">Songs</a>
+        <a href="catalogo.html">Playlists</a>
+        <a href="pedidos.html">Pedidos</a>
+        <a href="gestionUsuarios.html">Usuarios</a>
+        <a href="#" onclick="logout(); return false;">Logout</a>
+    </nav>
+
+    <h1>Gestión de Usuarios</h1>
+
+    <div id="contenedor-usuarios">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Persona</th>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Tipo ID</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+
+            <tbody id="tabla-gestion">
+                <!-- Aquí el script inyecta la tabla dinámica -->
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader" class="loader-overlay">
+        <div class="spinner"></div>
+        <p>Cargando usuarios...</p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

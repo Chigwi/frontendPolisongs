@@ -702,6 +702,82 @@ if (document.getElementById("contenedor-pedidos")) {
     }
 }
 
+// ===========================
+// LISTAR USUARIOS
+// ===========================
+if (document.getElementById("contenedor-usuarios")) {
+    
+    const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga
+
+    const credentials = sessionStorage.getItem('auth');
+
+    if (!credentials) {
+        alert("No estás autenticado. Redirigiendo al login...");
+        window.location.href = '/login.html';
+    } 
+    else {
+
+        fetch("http://localhost:8080/api/usuarios", {
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${credentials}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al obtener los usuarios");
+            }
+            return response.json();
+        })
+        .then(usuarios => {
+            mostrarUsuarios(usuarios);
+            loader.style.display = "none";  // Ocultar pantalla de carga
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            loader.style.display = "none";
+        });
+
+        function mostrarUsuarios(lista) {
+            let html = "<table>";
+            html += `
+                <tr>
+                    <th>ID Persona</th>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Tipo ID</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                </tr>
+            `;
+
+            lista.forEach(persona => {
+                html += `
+                    <tr>
+                        <td>${persona.idPersona}</td>
+                        <td>${persona.nombreUsuario}</td>
+                        <td>${persona.nombre}</td>
+                        <td>${persona.apellido}</td>
+                        <td>${persona.tipoID}</td>
+                        <td>${persona.direccion}</td>
+                        <td>${persona.telefono?.codigoNacion || ""} ${persona.telefono?.numero || ""}</td>
+                        <td>${persona.correo?.direccion || ""}</td>
+                        <td>${persona.rol?.nombre || "Sin rol"}</td>
+                    </tr>
+                `;
+            });
+
+            html += "</table>";
+            document.getElementById("contenedor-usuarios").innerHTML = html;
+        }
+    }
+}
+
+
 // SCRIPT PARA REGISTRO DE USUARIO
 if (document.getElementById("form-container")) {
 
@@ -775,6 +851,9 @@ console.log("Respuesta del servidor:", data);
         }
     });
 }
+
+//GESTION USUARIO
+
 
 //VENTA DE VINILO
 if(document.getElementById("form-card-vinilo")){
