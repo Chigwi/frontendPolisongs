@@ -10,7 +10,7 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background: #d7eaff; /* Azul claro suave */
+            background: #d7eaff;
             padding: 20px;
             color: #2c3e50;
         }
@@ -47,13 +47,72 @@
         h1 {
             text-align: center;
             margin-top: 25px;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
             font-size: 2.4rem;
             font-weight: 800;
             color: #1f2d3d;
         }
 
-        /* Grid general */
+        /* --------------------- BOTONES NUEVOS ---------------------- */
+
+        .btn-container {
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .fancy-btn {
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #1e2a78, #4b6cb7);
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-weight: 600;
+        }
+
+        .fancy-btn:hover {
+            background: linear-gradient(135deg, #15205f, #3d5da0);
+            transform: translateY(-3px);
+        }
+
+        .fancy-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* --------------------- BARRA DE BÚSQUEDA ---------------------- */
+
+        .search-container {
+            margin: 10px auto 25px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #searchInput {
+            padding: 10px 14px;
+            width: 220px;
+            border: 2px solid #b3c7e6;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.25s;
+            background: #ffffff;
+        }
+
+        #searchInput:focus {
+            border-color: #4b6cb7;
+            box-shadow: 0 0 6px rgba(75,108,183,0.3);
+        }
+
+        /* ------------------------------------------------------------ */
+
         .catalogo {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -61,7 +120,6 @@
             padding: 10px;
         }
 
-        /* Tarjetas de canciones */
         .cancion {
             background: white;
             border-radius: 12px;
@@ -81,7 +139,7 @@
             height: 160px;
             object-fit: cover;
             border-radius: 12px;
-            background: #eef4ff; /* Fondo si no hay imagen */
+            background: #eef4ff;
         }
 
         .cancion-title {
@@ -91,7 +149,6 @@
             color: #2c3e50;
         }
 
-        /* Espacio para icono o mini-banner */
         .image-slot {
             width: 140px;
             height: 140px;
@@ -102,46 +159,42 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.9rem;
-            color: #7288a6;
         }
-        /* LOADER OVERLAY */
-.loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.85);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(3px);
-    z-index: 9999;
-}
 
-/* Animación del spinner */
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 6px solid #bcd4ff;
-    border-top: 6px solid #1f2d3d;
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-    margin-bottom: 15px;
-}
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+            z-index: 9999;
+        }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #bcd4ff;
+            border-top: 6px solid #1f2d3d;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 15px;
+        }
 
-#loader p {
-    font-size: 1.1rem;
-    color: #1f2d3d;
-    font-weight: 600;
-}
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
+        #loader p {
+            font-size: 1.1rem;
+            color: #1f2d3d;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -155,20 +208,33 @@
         <a href="#" onclick="logout(); return false;">Logout</a>
     </nav>
 
-    <!-- Logo o imagen opcional arriba -->
-    <div class="image-slot"> <img src="img/Polisongs.png" alt="Logo" style="width:160px; height:auto;border-radius: 12px;"></div>
+    <div class="image-slot">
+        <img src="img/Polisongs.png" alt="Logo" style="width:160px; height:auto;border-radius: 12px;">
+    </div>
 
     <h1>Catálogo de Canciones</h1>
 
-    <!-- Contenedor dinámico -->
+    <!-- ⭐️ BOTONES ELEGANTES -->
+    <div class="btn-container">
+        <button id="refreshBtn" class="fancy-btn">Refrescar lista</button>
+        <button id="viniloBtn" class="fancy-btn">Formato Vinilo</button>
+        <button id="digitalBtn" class="fancy-btn">Formato Digital</button>
+    </div>
+
+    <!-- ⭐️ BARRA DE BÚSQUEDA -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar por proveedor...">
+        <button id="searchBtn" class="fancy-btn">Buscar</button>
+    </div>
+
     <div id="songsContainer" class="catalogo"></div>
 
     <div id="loader" class="loader-overlay">
-    <div class="spinner"></div>
-    <p>Cargando canciones...</p>
+        <div class="spinner"></div>
+        <p>Cargando canciones...</p>
     </div>
 
-
+    
     <script src="script.js"></script>
 </body>
 </html>

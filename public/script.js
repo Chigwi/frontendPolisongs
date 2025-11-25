@@ -297,19 +297,17 @@ cargarDatosUsuario();
 
 
 
-// ===========================
-//  SONGS PAGE
-// ===========================
 if (document.getElementById("songsContainer")) {
 
     const loader = document.getElementById("loader");
-    loader.style.display = "flex";  // Mostrar pantalla de carga
 
-    async function displaySongs() {
+    async function displaySongs(url = "http://localhost:8080/api/canciones") {
+        loader.style.display = "flex"; // Mostrar loader
+
         try {
-            const response = await fetch("http://localhost:8080/api/canciones");
+            const response = await fetch(url);
             const songs = await response.json();
-            
+
             const container = document.getElementById("songsContainer");
             container.innerHTML = "";
 
@@ -317,7 +315,6 @@ if (document.getElementById("songsContainer")) {
                 const songCard = document.createElement("div");
                 songCard.className = "cancion";
 
-                // PRIMERO agregamos el HTML
                 songCard.innerHTML = `
                     <img src="img/musica.png" alt="cover">
                     <div class="cancion-title">${song.nombre}</div>
@@ -329,18 +326,14 @@ if (document.getElementById("songsContainer")) {
                         <p><strong>Formato:</strong> ${song.formato.nombre}</p>
                     </div>
 
-
                     <button class="toggleBtn">Ver detalles</button>
                 `;
 
-                // LUEGO seleccionamos los elementos
                 const btn = songCard.querySelector(".toggleBtn");
                 const details = songCard.querySelector(".song-details");
 
-                // Y AHORA agregamos el evento
                 btn.addEventListener("click", () => {
                     const visible = details.style.display === "block";
-
                     details.style.display = visible ? "none" : "block";
                     btn.textContent = visible ? "Ver detalles" : "Ocultar detalles";
                 });
@@ -351,14 +344,66 @@ if (document.getElementById("songsContainer")) {
         } catch (error) {
             document.getElementById("songsContainer").innerText =
                 "Error: " + error.message;
+        } finally {
+            loader.style.display = "none"; // Ocultar loader
         }
-         finally {
-        loader.style.display = "none";  // Ocultar pantalla de carga
-    }
     }
 
+    // 🚀 Cargar todo al iniciar
     displaySongs();
+
+
+    // --------------------------------------------------------------------
+    // ⭐ CONECTAR BOTONES AL BACKEND
+    // --------------------------------------------------------------------
+
+    // REFRESCAR → todas las canciones
+    document.getElementById("refreshBtn")?.addEventListener("click", () => {
+        displaySongs("http://localhost:8080/api/canciones");
+    });
+
+    // VINILO → /api/canciones/formato/Vinilo
+    document.getElementById("viniloBtn")?.addEventListener("click", () => {
+        displaySongs("http://localhost:8080/api/canciones/formato/Vinilo");
+    });
+
+    // DIGITAL → /api/canciones/formato/Digital
+    document.getElementById("digitalBtn")?.addEventListener("click", () => {
+        displaySongs("http://localhost:8080/api/canciones/formato/Digital");
+    });
+
+
+    // ---------------------------------------------------------------
+    // ⭐⭐ FUNCIÓN DE BÚSQUEDA POR PROVEEDOR ⭐⭐
+    // ---------------------------------------------------------------
+
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+
+    if (searchBtn && searchInput) {
+
+        // BOTÓN BUSCAR
+        searchBtn.addEventListener("click", () => {
+            const proveedor = searchInput.value.trim();
+
+            if (proveedor === "") {
+                alert("Por favor ingresa un proveedor");
+                return;
+            }
+
+            displaySongs(`http://localhost:8080/api/canciones/proveedor/${proveedor}`);
+        });
+
+        // ENTER EN LA BARRA
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                searchBtn.click();
+            }
+        });
+    }
 }
+
+
 // ===========================
 //  VENTA CANCIONES
 // ===========================
