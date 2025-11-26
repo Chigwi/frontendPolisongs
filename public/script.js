@@ -301,6 +301,7 @@ if (document.getElementById("songsContainer")) {
 
     async function addToCart(id, cantidad) {
     try {
+        alert("Canción agregada al carrito" + id + " Cantidad: " + cantidad);
         const credentials = sessionStorage.getItem("auth");
         const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/${cantidad}`, {
             method: "POST",
