@@ -398,15 +398,15 @@ if (document.getElementById("songsContainer")) {
                 masBtn.addEventListener("click", () => {
                     let val = parseInt(spanCant.textContent) + 1;
                     spanCant.textContent = val;
-                    addToCart(song.id);
+                    addToCart(song.id); // <-- aquí falta pasar val
                 });
 
-                menosBtn.addEventListener("click", () => {
-                    let val = parseInt(spanCant.textContent);
-                    if (val > 1) {
-                        spanCant.textContent = val - 1;
-                        removeFromCart(song.id);
-                    }
+                    menosBtn.addEventListener("click", () => {
+                        let val = parseInt(spanCant.textContent);
+                        if (val > 1) {
+                            spanCant.textContent = val - 1;
+                            removeFromCart(song.id); // <-- aquí falta pasar val - 1
+                        }
                 });
 
                 container.appendChild(songCard);
