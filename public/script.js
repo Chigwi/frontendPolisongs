@@ -944,78 +944,129 @@ console.log("Respuesta del servidor:", data);
 //GESTION USUARIO
 
 
-//VENTA DE VINILO
-if(document.getElementById("form-card-vinilo")){
+// VENTA DE VINILO
+if (document.getElementById("form-card-vinilo")) {
     let songIndex = 0;
 
-        function addSong() {
-            const container = document.getElementById("songsContainer");
+    function addSong() {
+        const container = document.getElementById("songsContainer");
 
-            const box = document.createElement("div");
-            box.className = "song-box";
-            box.setAttribute("data-index", songIndex);
+        const box = document.createElement("div");
+        box.className = "song-box";
+        box.setAttribute("data-index", songIndex);
 
-            box.innerHTML = `
-                <label>Nombre</label>
-                <input type="text" id="nombre_${songIndex}" placeholder="Ej: Geyser">
+        box.innerHTML = `
+            <label>Nombre</label>
+            <input type="text" id="nombre_${songIndex}" placeholder="Ej: Geyser">
 
-                <label>Artista</label>
-                <input type="text" id="artista_${songIndex}" placeholder="Ej: Mitski">
+            <label>Artista</label>
+            <input type="text" id="artista_${songIndex}" placeholder="Ej: Mitski">
 
-                <label>Año de Publicación</label>
-                <input type="text" id="anno_${songIndex}" placeholder="Ej: 2018">
+            <label>Año de Publicación</label>
+            <input type="text" id="anno_${songIndex}" placeholder="Ej: 2018">
 
-                <label>Precio (fijo)</label>
-                <input type="number" id="precio_${songIndex}" value="5000" readonly>
+            <label>Formato</label>
+            <input type="text" id="formato_${songIndex}" value="Vinilo" readonly>
 
-                <label>Formato</label>
-                <input type="text" id="formato_${songIndex}" value="Vinilo" readonly>
+            <label>Cantidad</label>
+            <input type="number" id="cantidad_${songIndex}" placeholder="Ej: 30">
 
-                <label>Cantidad</label>
-                <input type="number" id="cantidad_${songIndex}" placeholder="Ej: 30">
+            <button class="remove-btn" onclick="removeSong(${songIndex})">Eliminar Canción</button>
+        `;
 
-                <button class="remove-btn" onclick="removeSong(${songIndex})">Eliminar Canción</button>
-            `;
+        container.appendChild(box);
+        songIndex++;
+    }
 
-            container.appendChild(box);
-            songIndex++;
+    function removeSong(index) {
+        const box = document.querySelector(`[data-index="${index}"]`);
+        if (box) box.remove();
+    }
+
+    // ✅ Adaptación con fetch al backend
+    window.crearVinilo = async function(event) {
+        if (event) event.preventDefault();
+
+        const nombre = document.getElementById("viniloNombre").value.trim();
+        const precioTotal = document.getElementById("viniloPrecio").value.trim();
+        const songs = [];
+
+        // Validación básica
+        if (!nombre) {
+            alert("Por favor, ingresa un nombre para el vinilo.");
+            return;
         }
 
-        function removeSong(index) {
-            const box = document.querySelector(`[data-index="${index}"]`);
-            if (box) box.remove();
+        document.querySelectorAll(".song-box").forEach(box => {
+            const i = box.getAttribute("data-index");
+
+            const songNombre = document.getElementById(`nombre_${i}`).value.trim();
+            const songArtista = document.getElementById(`artista_${i}`).value.trim();
+            const songAnno = document.getElementById(`anno_${i}`).value.trim();
+            const songCantidad = Number(document.getElementById(`cantidad_${i}`).value);
+
+            if (!songNombre || !songArtista || !songAnno || isNaN(songCantidad) || songCantidad <= 0) {
+                alert(`Completa todos los campos para la canción ${parseInt(i) + 1}.`);
+                return;
+            }
+
+            songs.push({
+                nombre: songNombre,
+                artista: songArtista,
+                annoPublicacion: songAnno,
+                precio: precioTotal,
+                formato: {
+                    nombre: "Vinilo",
+                    cantidad: songCantidad
+                }
+            });
+        });
+
+        if (songs.length === 0) {
+            alert("Agrega al menos una canción al vinilo.");
+            return;
         }
 
-        function crearVinilo() {
-            const nombre = document.getElementById("viniloNombre").value;
-            const songs = [];
-            const precio = document.getElementById("viniloPrecio").value;
+        const vinilo = {
+            nombre: nombre,
+            canciones: songs,
+            precioTotal: precioTotal/ songs.length  // Precio promedio por canción
+        };
 
-            document.querySelectorAll(".song-box").forEach(box => {
-                const i = box.getAttribute("data-index");
+        // Credenciales
+        const credentials = sessionStorage.getItem('auth');
+        if (!credentials) {
+            alert("No estás autenticado. Por favor, inicia sesión.");
+            return;
+        }
 
-                songs.push({
-                    nombre: document.getElementById(`nombre_${i}`).value,
-                    artista: document.getElementById(`artista_${i}`).value,
-                    annoPublicacion: document.getElementById(`anno_${i}`).value,
-                    precio: 5000,
-                    formato: {
-                        nombre: "Vinilo",
-                        cantidad: Number(document.getElementById(`cantidad_${i}`).value)
-                    }
-                });
+        try {
+            const response = await fetch("http://localhost:8080/api/playlist", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Basic ${credentials}`
+                },
+                body: JSON.stringify(vinilo)
             });
 
-            const vinilo = {
-                nombre: nombre,
-                canciones: songs,
-                precioTotal: precio
-            };
-
-            console.log("VINILO CREADO:", vinilo);
-            alert("Vinilo creado. Revisa consola.");
+            if (response.ok) {
+                const result = await response.json();
+                alert("Vinilo creado exitosamente: " + result.nombre);
+                // Resetear formulario
+                document.getElementById("viniloNombre").value = "";
+                document.getElementById("viniloPrecio").value = "";
+                document.getElementById("songsContainer").innerHTML = "";
+                songIndex = 0;
+            } else if (response.status === 401) {
+                alert("Credenciales inválidas. Por favor, inicia sesión nuevamente.");
+            } else {
+                alert("Error al crear el vinilo: " + response.status + " - " + response.statusText);
+            }
+        } catch (error) {
+            console.error("Error de conexión:", error);
+            alert("Error de conexión al servidor. Revisa la consola para detalles.");
         }
-
-
+    };
 }
 
