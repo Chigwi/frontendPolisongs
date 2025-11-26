@@ -299,20 +299,38 @@ if (document.getElementById("songsContainer")) {
 
     const loader = document.getElementById("loader");
 
-    async function addToCart(id) {
-        try {
-            await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/1`);
-        } catch (e) {
-            console.error("Error al agregar al carrito", e);
+    async function addToCart(id, cantidad = 1) {
+    try {
+        const credentials = sessionStorage.getItem("auth"); // credenciales guardadas
+        const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/${cantidad}`, {
+            method: "POST", // usa POST si tu endpoint está anotado con @PostMapping
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${credentials}`
+            }
+        });
+
+        if (!response.ok) {
+            console.error("Error al agregar al carrito:", response.status, response.statusText);
         }
+    } catch (e) {
+        console.error("Error al agregar al carrito", e);
+    }
     }
 
     async function removeFromCart(id) {
-        try {
-            await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/1`);
-        } catch (e) {
-            console.error("Error al remover del carrito", e);
-        }
+    try {
+        const credentials = sessionStorage.getItem("auth"); // asegúrate de tener las credenciales
+        await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/1`, {
+            method: "POST",   // o "DELETE" según cómo esté tu backend
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${credentials}`
+            }
+        });
+    } catch (e) {
+        console.error("Error al remover del carrito", e);
+    }
     }
 
     async function displaySongs(url = "http://localhost:8080/api/canciones") {
