@@ -6,10 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// =====================================
+//         CARGAR CARRITO
+// =====================================
 async function loadCart() {
     const credentials = sessionStorage.getItem("auth");
 
     const cartBox = document.getElementById("cartItems");
+    const emptyCart = document.getElementById("emptyCart");
+
     cartBox.innerHTML = "Cargando...";
 
     try {
@@ -18,6 +23,18 @@ async function loadCart() {
         });
 
         const cart = await response.json();
+
+        // Si el carrito está vacío → cambiar vista
+        if (!cart.items || cart.items.length === 0) {
+            cartBox.style.display = "none";
+            emptyCart.style.display = "block";
+
+            document.getElementById("subtotalValue").textContent = "0";
+            document.getElementById("ivaValue").textContent = "0";
+            document.getElementById("totalValue").textContent = "0";
+            return;
+        }
+
         renderCart(cart);
 
     } catch (error) {
@@ -28,19 +45,22 @@ async function loadCart() {
 
 
 
-// ----------------------------------------------------
-//   Renderizar carrito y calcular totales correctamente
-// ----------------------------------------------------
+// =====================================
+//   RENDERIZAR CARRITO Y TOTALES
+// =====================================
 function renderCart(cart) {
     const container = document.getElementById("cartItems");
-    container.innerHTML = "";
+    const emptyCart = document.getElementById("emptyCart");
 
+    emptyCart.style.display = "none";
+    container.style.display = "block";
+
+    container.innerHTML = "";
     let subtotal = 0;
 
     cart.items.forEach(item => {
-        // Precio unitario real → evita errores cuando el backend trae precio total
-        const precioUnit = item.precio / item.cantidad;
 
+        const precioUnit = item.precio / item.cantidad;
         subtotal += precioUnit * item.cantidad;
 
         const div = document.createElement("div");
@@ -92,12 +112,10 @@ function renderCart(cart) {
         container.appendChild(div);
     });
 
-    // ---- CALCULOS ----
     const iva = subtotal * 0.19;
-    const envio = 0; // Según tu diseño → NO se cobra envío
-    const total = subtotal + iva + envio;
+    const envio = 0;
+    const total = subtotal + iva;
 
-    // ---- ACTUALIZAR EN LA PANTALLA ----
     document.getElementById("subtotalValue").textContent = subtotal.toFixed(2);
     document.getElementById("ivaValue").textContent = iva.toFixed(2);
     document.getElementById("totalValue").textContent = total.toFixed(2);
@@ -105,31 +123,91 @@ function renderCart(cart) {
 
 
 
-// --------------------------------------------------
-//   Actualizar cantidad en el backend y recargar
-// --------------------------------------------------
+// =====================================
+//   Actualizar cantidad en backend
+// =====================================
 async function updateItem(item, newQuantity) {
     const credentials = sessionStorage.getItem("auth");
 
     try {
         if (newQuantity > item.cantidad) {
-            // Aumentar
             await fetch(`http://localhost:8080/api/carritoCompras/add2cart/${item.tipoItem}/${item.itemId}/1`, {
                 method: "POST",
                 headers: { "Authorization": `Basic ${credentials}` }
             });
         } else {
-            // Disminuir
             await fetch(`http://localhost:8080/api/carritoCompras/remove/${item.tipoItem}/${item.itemId}/1`, {
                 method: "POST",
                 headers: { "Authorization": `Basic ${credentials}` }
             });
         }
 
-        // Recargar para obtener cantidades reales desde el backend
         loadCart();
 
     } catch (error) {
         console.error("Error actualizando item:", error);
     }
+}
+
+
+
+// =====================================
+//         CHECKOUT (BOTÓN FINAL)
+// =====================================
+async function checkout() {
+    const credentials = sessionStorage.getItem("auth");
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/carritoCompras/cart/checkout`, {
+            method: "POST",
+            headers: { "Authorization": `Basic ${credentials}` }
+        });
+
+        const result = await response.json();
+
+        // --------------------------
+        //   COMPRA EXITOSA
+        // --------------------------
+        if (!result.items || result.items.length === 0) {
+
+            mostrarModal("Compra Exitosa", "Tu pago fue procesado correctamente. 🎉");
+
+            // Vaciar carrito en la vista
+            document.getElementById("cartItems").innerHTML = "";
+            document.getElementById("cartItems").style.display = "none";
+
+            document.getElementById("emptyCart").style.display = "block";
+
+            document.getElementById("subtotalValue").textContent = "0";
+            document.getElementById("ivaValue").textContent = "0";
+            document.getElementById("totalValue").textContent = "0";
+
+            return;
+        }
+
+        // --------------------------
+        //   COMPRA FALLIDA
+        // --------------------------
+        mostrarModal("Error en la Compra", "Ocurrió un problema. Intenta nuevamente.");
+
+    } catch (error) {
+        mostrarModal("Error", "No se pudo conectar con el servidor.");
+        console.error(error);
+    }
+}
+
+
+
+// =====================================
+//           MODAL DE MENSAJE
+// =====================================
+function mostrarModal(titulo, mensaje) {
+    document.getElementById("modalTitulo").textContent = titulo;
+    document.getElementById("modalMensaje").textContent = mensaje;
+
+    document.getElementById("modalCompra").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("modalCompra").style.display = "none";
 }

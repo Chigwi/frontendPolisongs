@@ -151,18 +151,21 @@
 
 <!-- NAV -->
 <nav>
-    <a href="login.html" class="nav-link unauth-only">Login</a>  <!-- Cambiado de 'public' a 'unauth-only' -->
-    <a href="songs.html" class="nav-link public">Songs</a>
-    <a href="catalogo.html" class="nav-link public">Playlists</a>
-    <a href="ventaCanciones.html" class="nav-link auth-required basic-required">ventaCanciones</a>
-    <a href="ventaPlaylist.html" class="nav-link auth-required basic-required">ventaPlaylist</a>
-    <a href="usuario.html" class="nav-link auth-required basic-required">Usuario</a>
-    <a href="pedidos.html" class="nav-link auth-required super-required">Pedidos</a>
-    <a href="gestionUsuario.html" class="nav-link auth-required super-required">gestionUsuario</a>
-    <a href="#" onclick="logout(); return false;" class="nav-link auth-required basic-required">Logout</a>
     <a href="carrito.html" class="nav-link auth-required basic-required carrito-link">
         <img src="img/carrito.png" alt="Carrito" class="carrito-icon">
     <span id="carrito-count" class="carrito-count">0</span>
+    </a>
+    <a href="login.html" class="nav-link unauth-only">Login</a>  <!-- Cambiado de 'public' a 'unauth-only' -->
+    <a href="songs.html" class="nav-link public">Canciones</a>
+    <a href="catalogo.html" class="nav-link public">Playlists</a>
+    <a href="ventaCanciones.html" class="nav-link auth-required basic-required">Vender Canciones</a>
+    <a href="ventaPlaylist.html" class="nav-link auth-required basic-required">Vender Playlist</a>
+          <a href="ventaVinilo.html" class="nav-link auth-required basic-required">Vender Vinilos</a>
+    <a href="usuario.html" class="nav-link auth-required basic-required">Usuario</a>
+    <a href="pedidos.html" class="nav-link auth-required super-required">Gestionar Pedidos</a>
+    <a href="gestionUsuario.html" class="nav-link auth-required super-required">Gestionar Usuario</a>
+    <a href="#" onclick="logout(); return false;" class="nav-link auth-required basic-required">
+        <img src="img/log-out.png" alt="Carrito" class="carrito-icon">
     </a>
     <!-- Ocultar Home ya que es la página actual, o agrégalo si quieres -->
 </nav>
