@@ -604,79 +604,138 @@ if (document.getElementById("catalogo")) {
 
 }
 
+// VENTA DE PLAYLIST
 
-//VENTA DE PLAYLIST
-if(document.getElementById("form-card-playlist")){
-    let songIndex = 0;
+// Definir funciones globalmente para que onclick las encuentre
+let songIndex = 0;
 
-        function addSong() {
-            const container = document.getElementById("songsContainer");
+function addSong() {
+    const container = document.getElementById("songsContainer");
 
-            const box = document.createElement("div");
-            box.className = "song-box";
-            box.setAttribute("data-index", songIndex);
+    const box = document.createElement("div");
+    box.className = "song-box";
+    box.setAttribute("data-index", songIndex);
 
-            box.innerHTML = `
-                <label>Nombre</label>
-                <input type="text" id="nombre_${songIndex}" placeholder="Ej: Geyser">
+    box.innerHTML = `
+        <label>Nombre</label>
+        <input type="text" id="nombre_${songIndex}" placeholder="Ej: Geyser">
 
-                <label>Artista</label>
-                <input type="text" id="artista_${songIndex}" placeholder="Ej: Mitski">
+        <label>Artista</label>
+        <input type="text" id="artista_${songIndex}" placeholder="Ej: Mitski">
 
-                <label>Año de Publicación</label>
-                <input type="text" id="anno_${songIndex}" placeholder="Ej: 2018">
+        <label>Año de Publicación</label>
+        <input type="text" id="anno_${songIndex}" placeholder="Ej: 2018">
 
-                <label>Precio (fijo)</label>
-                <input type="number" id="precio_${songIndex}" value="5000" readonly>
+        <label>Precio (fijo)</label>
+        <input type="number" id="precio_${songIndex}" value="5000" readonly>
 
-                <label>Formato</label>
-                <input type="text" id="formato_${songIndex}" value="Digital" readonly>
+        <label>Formato</label>
+        <input type="text" id="formato_${songIndex}" value="Digital" readonly>
 
-                <label>Cantidad</label>
-                <input type="number" id="cantidad_${songIndex}" placeholder="Ej: 30">
+        <label>Cantidad</label>
+        <input type="number" id="cantidad_${songIndex}" placeholder="Ej: 30">
 
-                <button class="remove-btn" onclick="removeSong(${songIndex})">Eliminar Canción</button>
-            `;
+        <button class="remove-btn" onclick="removeSong(${songIndex})">Eliminar Canción</button>
+    `;
 
-            container.appendChild(box);
-            songIndex++;
-        }
-
-        function removeSong(index) {
-            const box = document.querySelector(`[data-index="${index}"]`);
-            if (box) box.remove();
-        }
-
-        function crearPlaylist() {
-            const nombre = document.getElementById("playlistNombre").value;
-            const songs = [];
-
-            document.querySelectorAll(".song-box").forEach(box => {
-                const i = box.getAttribute("data-index");
-
-                songs.push({
-                    nombre: document.getElementById(`nombre_${i}`).value,
-                    artista: document.getElementById(`artista_${i}`).value,
-                    annoPublicacion: document.getElementById(`anno_${i}`).value,
-                    precio: 5000,
-                    formato: {
-                        nombre: "Digital",
-                        cantidad: Number(document.getElementById(`cantidad_${i}`).value)
-                    }
-                });
-            });
-
-            const playlist = {
-                nombre: nombre,
-                canciones: songs
-            };
-
-            console.log("PLAYLIST CREADA:", playlist);
-            alert("Playlist creada. Revisa consola.");
-        }
-
-
+    container.appendChild(box);
+    songIndex++;
 }
+
+function removeSong(index) {
+    const box = document.querySelector(`[data-index="${index}"]`);
+    if (box) box.remove();
+}
+
+async function crearPlaylist() {
+    const nombre = document.getElementById("playlistNombre").value.trim();
+    const songs = [];
+
+    // Validación básica: nombre no vacío y al menos una canción
+    if (!nombre) {
+        alert("Por favor, ingresa un nombre para la playlist.");
+        return;
+    }
+
+    document.querySelectorAll(".song-box").forEach(box => {
+        const i = box.getAttribute("data-index");
+
+        const songNombre = document.getElementById(`nombre_${i}`).value.trim();
+        const songArtista = document.getElementById(`artista_${i}`).value.trim();
+        const songAnno = document.getElementById(`anno_${i}`).value.trim();
+        const songCantidad = Number(document.getElementById(`cantidad_${i}`).value);
+
+        // Validación básica por canción (opcional, pero recomendado)
+        if (!songNombre || !songArtista || !songAnno || isNaN(songCantidad) || songCantidad <= 0) {
+            alert(`Completa todos los campos para la canción ${parseInt(i) + 1}.`);
+            return; // Detiene la creación si hay error
+        }
+
+        songs.push({
+            nombre: songNombre,
+            artista: songArtista,
+            annoPublicacion: songAnno,
+            precio: 5000,
+            formato: {
+                nombre: "Digital",
+                cantidad: songCantidad
+            }
+        });
+    });
+
+    if (songs.length === 0) {
+        alert("Agrega al menos una canción a la playlist.");
+        return;
+    }
+
+    const playlist = {
+        nombre: nombre,
+        canciones: songs
+    };
+
+    // Obtener credenciales de sessionStorage (para Basic Auth)
+    const credentials = sessionStorage.getItem('auth');
+    if (!credentials) {
+        alert("No estás autenticado. Por favor, inicia sesión.");
+        // Opcional: redirigir a login: window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        // Enviar POST al backend con Basic Auth
+        const response = await fetch("http://localhost:8080/api/playlist", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${credentials}`  // Header para Basic Auth
+            },
+            body: JSON.stringify(playlist)
+        });
+
+        if (response.ok) {
+            const result = await response.json(); // Asume que el backend devuelve JSON
+            alert("Playlist creada exitosamente: " + result.nombre); // Ajusta según la respuesta del backend
+            // Opcional: resetear formulario
+            document.getElementById("playlistNombre").value = "";
+            document.getElementById("songsContainer").innerHTML = "";
+            songIndex = 0;
+        } else if (response.status === 401) {
+            alert("Credenciales inválidas. Por favor, inicia sesión nuevamente.");
+            // Opcional: limpiar credenciales y redirigir: sessionStorage.removeItem("auth"); window.location.href = "login.html";
+        } else {
+            alert("Error al crear la playlist: " + response.status + " - " + response.statusText);
+        }
+    } catch (error) {
+        console.error("Error de conexión:", error);
+        alert("Error de conexión al servidor. Revisa la consola para detalles.");
+    }
+}
+
+// Verificar si el elemento existe (opcional, para lógica adicional si es necesario)
+if (document.getElementById("form-card-playlist")) {
+    // Aquí puedes agregar inicializaciones si las necesitas, pero las funciones ya están globales
+}
+
 
  
 // ===========================
