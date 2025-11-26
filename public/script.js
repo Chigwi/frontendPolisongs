@@ -293,15 +293,30 @@ async function cargarPlaylists() {
 cargarDatosUsuario();
 }
 
-   
-
+//pantalla de canciones
 
 if (document.getElementById("songsContainer")) {
 
     const loader = document.getElementById("loader");
 
+    async function addToCart(id) {
+        try {
+            await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/1`);
+        } catch (e) {
+            console.error("Error al agregar al carrito", e);
+        }
+    }
+
+    async function removeFromCart(id) {
+        try {
+            await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/1`);
+        } catch (e) {
+            console.error("Error al remover del carrito", e);
+        }
+    }
+
     async function displaySongs(url = "http://localhost:8080/api/canciones") {
-        loader.style.display = "flex"; // Mostrar loader
+        loader.style.display = "flex";
 
         try {
             const response = await fetch(url);
@@ -326,8 +341,17 @@ if (document.getElementById("songsContainer")) {
                     </div>
 
                     <button class="toggleBtn">Ver detalles</button>
+                    
+                    <button class="add-cart-btn addBtn">Agregar al carrito</button>
+
+                    <div class="cantidad-controller" style="display:none;">
+                        <img src="img/menos.png" class="cantidad-btn menosBtn">
+                        <span>1</span>
+                        <img src="img/mas.png" class="cantidad-btn masBtn">
+                    </div>
                 `;
 
+                // detalles
                 const btn = songCard.querySelector(".toggleBtn");
                 const details = songCard.querySelector(".song-details");
 
@@ -337,67 +361,72 @@ if (document.getElementById("songsContainer")) {
                     btn.textContent = visible ? "Ver detalles" : "Ocultar detalles";
                 });
 
+                // carrito
+                const addBtn = songCard.querySelector(".addBtn");
+                const controller = songCard.querySelector(".cantidad-controller");
+                const spanCant = controller.querySelector("span");
+                const masBtn = controller.querySelector(".masBtn");
+                const menosBtn = controller.querySelector(".menosBtn");
+
+                addBtn.addEventListener("click", () => {
+                    addBtn.style.display = "none";
+                    controller.style.display = "flex";
+                    addToCart(song.id);
+                });
+
+                masBtn.addEventListener("click", () => {
+                    let val = parseInt(spanCant.textContent) + 1;
+                    spanCant.textContent = val;
+                    addToCart(song.id);
+                });
+
+                menosBtn.addEventListener("click", () => {
+                    let val = parseInt(spanCant.textContent);
+                    if (val > 1) {
+                        spanCant.textContent = val - 1;
+                        removeFromCart(song.id);
+                    }
+                });
+
                 container.appendChild(songCard);
             });
 
         } catch (error) {
-            document.getElementById("songsContainer").innerText =
-                "Error: " + error.message;
+            document.getElementById("songsContainer").innerText = "Error: " + error.message;
         } finally {
-            loader.style.display = "none"; // Ocultar loader
+            loader.style.display = "none";
         }
     }
 
-    // 🚀 Cargar todo al iniciar
     displaySongs();
 
-
-    // --------------------------------------------------------------------
-    // ⭐ CONECTAR BOTONES AL BACKEND
-    // --------------------------------------------------------------------
-
-    // REFRESCAR → todas las canciones
     document.getElementById("refreshBtn")?.addEventListener("click", () => {
         displaySongs("http://localhost:8080/api/canciones");
     });
 
-    // VINILO → /api/canciones/formato/Vinilo
     document.getElementById("viniloBtn")?.addEventListener("click", () => {
         displaySongs("http://localhost:8080/api/canciones/formato/vinilo");
     });
 
-    // DIGITAL → /api/canciones/formato/Digital
     document.getElementById("digitalBtn")?.addEventListener("click", () => {
         displaySongs("http://localhost:8080/api/canciones/formato/digital");
     });
-
-
-    // ---------------------------------------------------------------
-    // ⭐⭐ FUNCIÓN DE BÚSQUEDA POR PROVEEDOR ⭐⭐
-    // ---------------------------------------------------------------
 
     const searchInput = document.getElementById("searchInput");
     const searchBtn = document.getElementById("searchBtn");
 
     if (searchBtn && searchInput) {
-
-        // BOTÓN BUSCAR
         searchBtn.addEventListener("click", () => {
             const proveedor = searchInput.value.trim();
-
             if (proveedor === "") {
                 alert("Por favor ingresa un proveedor");
                 return;
             }
-
             displaySongs(`http://localhost:8080/api/canciones/proveedor/${proveedor}`);
         });
 
-        // ENTER EN LA BARRA
         searchInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                searchBtn.click();
-            }
+            if (e.key === "Enter") searchBtn.click();
         });
     }
 }
