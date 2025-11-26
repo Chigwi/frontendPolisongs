@@ -301,7 +301,6 @@ if (document.getElementById("songsContainer")) {
 
     async function addToCart(id, cantidad) {
     try {
-        alert("Canción agregada al carrito" + id + " Cantidad: " + cantidad);
         const credentials = sessionStorage.getItem("auth");
         const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/1`, {
             method: "POST",
@@ -531,15 +530,61 @@ if (document.getElementById("form-card-cancion")) {
     // Agregar event listener al formulario para manejar el submit (recomendado)
     form.addEventListener("submit", crearCancion);
 }
+
 // CATALOGO //
 
 if (document.getElementById("catalogo")) {
+
+  // ---------------------------
+  // 🔹 FUNCIONES DE CARRITO
+  // ---------------------------
+  async function addToCart(id, cantidad) {
+    try {
+      const credentials = sessionStorage.getItem("auth");
+
+      const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/playlist/${id}/1`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Basic ${credentials}`
+        }
+      });
+
+      if (!response.ok) {
+        console.error("Error al agregar al carrito:", response.status, response.statusText);
+      }
+    } catch (e) {
+      console.error("Error al agregar al carrito", e);
+    }
+  }
+
+  async function removeFromCart(id, cantidad) {
+    try {
+      const credentials = sessionStorage.getItem("auth");
+
+      const response = await fetch(`http://localhost:8080/api/carritoCompras/remove/playlist/${id}/1`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Basic ${credentials}`
+        }
+      });
+
+      if (!response.ok) {
+        console.error("Error al remover del carrito:", response.status, response.statusText);
+      }
+
+    } catch (e) {
+      console.error("Error al remover del carrito", e);
+    }
+  }
+
+
   // ---------------------------
   // 🔹 FUNCIÓN PRINCIPAL
   // ---------------------------
   async function cargarCatalogo(url = "http://localhost:8080/api/playlist") {
     const loader = document.getElementById("loader");
-    loader.style.display = "flex";  // Mostrar pantalla de carga (agregado aquí)
+    loader.style.display = "flex";
 
     try {
       const response = await fetch(url);
@@ -550,8 +595,11 @@ if (document.getElementById("catalogo")) {
 
       playlists.forEach(pl => {
         const card = document.createElement("div");
-        card.className = "playlist"; // MISMA CLASE QUE TU CSS
+        card.className = "playlist";
 
+        // -------------------------------------
+        // 🔹 SE AGREGA EL BOTÓN Y CONTROL CANTIDAD
+        // -------------------------------------
         card.innerHTML = `
           <img src="img/disco.jpg" alt="${pl.nombre}">
           <div class="playlist-title">${pl.nombre}</div>
@@ -559,6 +607,15 @@ if (document.getElementById("catalogo")) {
           <button class="btn btn-primary toggleBtn">
               Ver detalles
           </button>
+
+          <button class="add-cart-btn addBtn">Agregar al carrito</button>
+
+          <div class="cantidad-controller" style="display:none; justify-content:center; align-items:center; gap:10px; margin-top:10px;">
+          <img src="img/menos.png" class="cantidad-btn menosBtn" style="width:10px; height:10px; object-fit:contain; cursor:pointer;">
+          <span>1</span>   
+          <img src="img/mas.png" class="cantidad-btn masBtn" style="width:10px; height:10px; object-fit:contain; cursor:pointer;">
+
+          </div>
         `;
 
         const btn = card.querySelector(".toggleBtn");
@@ -568,10 +625,8 @@ if (document.getElementById("catalogo")) {
             const res = await fetch(`http://localhost:8080/api/playlist/${pl.idPlaylist}`);
             const playlistDetails = await res.json();
 
-            // Setear título del modal
             document.getElementById("modalTitle").textContent = playlistDetails.nombre;
 
-            // Crear canciones
             const songsHtml =
               playlistDetails.canciones?.length > 0
                 ? playlistDetails.canciones
@@ -590,12 +645,41 @@ if (document.getElementById("catalogo")) {
 
             document.getElementById("modalSongs").innerHTML = songsHtml;
 
-            // Mostrar modal
             document.getElementById("playlistModal").style.display = "block";
           } catch (err) {
             console.error("Error al cargar detalles:", err);
           }
         });
+
+        // -----------------------------
+        // 🔹 LÓGICA DEL CARRITO
+        // -----------------------------
+        const addBtn = card.querySelector(".addBtn");
+        const controller = card.querySelector(".cantidad-controller");
+        const spanCant = controller.querySelector("span");
+        const masBtn = controller.querySelector(".masBtn");
+        const menosBtn = controller.querySelector(".menosBtn");
+
+        addBtn.addEventListener("click", () => {
+          addBtn.style.display = "none";
+          controller.style.display = "flex";
+          addToCart(pl.idPlaylist, 1);
+        });
+
+        masBtn.addEventListener("click", () => {
+          let val = parseInt(spanCant.textContent) + 1;
+          spanCant.textContent = val;
+          addToCart(pl.idPlaylist, val);
+        });
+
+        menosBtn.addEventListener("click", () => {
+          let val = parseInt(spanCant.textContent);
+          if (val > 1) {
+            spanCant.textContent = val - 1;
+            removeFromCart(pl.idPlaylist, val - 1);
+          }
+        });
+
 
         contenedor.appendChild(card);
       });
@@ -605,18 +689,16 @@ if (document.getElementById("catalogo")) {
         "Error cargando catálogo: " + error.message;
     }
     finally {
-        loader.style.display = "none";  // Ocultar pantalla de carga
+      loader.style.display = "none";
     }
   }
 
-  // 🚀 Cargar todo al iniciar
   cargarCatalogo();
 
 
   // -----------------------------------------
   // 🔹 FUNCIÓN DE BÚSQUEDA POR PROVEEDOR
   // -----------------------------------------
-
   const searchInput = document.getElementById("searchInput");
   const searchButton = document.getElementById("searchBtn");
 
@@ -625,14 +707,11 @@ if (document.getElementById("catalogo")) {
       const nombre = searchInput.value.trim();
 
       if (nombre.length === 0) {
-        // Si está vacío → cargar todo
         cargarCatalogo("http://localhost:8080/api/playlist");
         return;
       }
 
-      // Buscar por proveedor
-      const url = `http://localhost:8080/api/playlist/proveedor/${nombre}`;
-      cargarCatalogo(url);
+      cargarCatalogo(`http://localhost:8080/api/playlist/proveedor/${nombre}`);
     });
   }
 
@@ -654,6 +733,7 @@ if (document.getElementById("catalogo")) {
   });
 
 }
+
 
 
 // Venta de Playlists
