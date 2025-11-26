@@ -15,7 +15,6 @@
       color: #2c3e50;
     }
 
-
     nav {
       background: #ffffff;
       border-bottom: 1px solid #dce3eb;
@@ -88,7 +87,6 @@
       color: #2c3e50;
     }
 
-
     .image-slot {
       width: 140px;
       height: 140px;
@@ -103,170 +101,199 @@
       color: #7288a6;
     }
 
-    /* ------------------------- */
-/* ESTILO CORPORATIVO DE BOTONES */
-/* ------------------------- */
+    .btn {
+      background: #ffffff;
+      color: #2c3e50;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #d0d8e4;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.25s;
+      display: inline-block;
+    }
 
-.btn {
-  background: #ffffff;
-  color: #2c3e50;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 1px solid #d0d8e4;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.25s;
-  display: inline-block;
-}
+    .btn:hover {
+      background: #e9eef5;
+      color: #1a2a33;
+    }
 
-.btn:hover {
-  background: #e9eef5;
-  color: #1a2a33;
-}
+    .btn-primary {
+      background: #4a90e2;
+      color: white;
+      border: none;
+    }
 
-/* Botón primario */
-.btn-primary {
-  background: #4a90e2;
-  color: white;
-  border: none;
-}
+    .btn-primary:hover {
+      background: #3b7ac4;
+    }
 
-.btn-primary:hover {
-  background: #3b7ac4;
-}
+    /* ⭐⭐⭐ BARRA SUPERIOR ⭐⭐⭐ */
 
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px;
+      background: #ffffff;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
 
-/* ------------------------- */
-/* ESTILO DEL MODAL */
-/* ------------------------- */
+    .search-bar {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #d0d8e4;
+      outline: none;
+      width: 210px;
+      font-size: 15px;
+      transition: 0.25s;
+    }
 
-.modal {
-  display: none; 
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(44, 62, 80, 0.45); /* Oscuro suave */
-  backdrop-filter: blur(4px);
-}
+    .search-bar:focus {
+      border-color: #003566;
+      box-shadow: 0 0 6px rgba(0, 53, 102, 0.3);
+    }
 
-/* Caja del modal */
-.modal-content {
-  background: #ffffff;
-  margin: 8% auto;
-  padding: 25px;
-  width: 90%;
-  max-width: 480px;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  animation: fadeIn 0.3s ease;
-  color: #2c3e50;
-  text-align: center;
-}
+        .format-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      background: linear-gradient(135deg, #003566, #005f99);
+      color: white;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 4px 10px rgba(0, 53, 102, 0.3);
+    }
 
-/* Título */
-.modal-content h2 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  margin-bottom: 15px;
-  color: #1f2d3d;
-}
+    .format-btn:hover {
+      transform: scale(1.07);
+      background: linear-gradient(135deg, #002748, #004f82);
+    }
 
-/* Lista de canciones */
-#modalSongs {
-  margin-top: 10px;
-  text-align: left;
-}
+    /* MODAL Y LOADER (NO TOCADO) */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(44, 62, 80, 0.45);
+      backdrop-filter: blur(4px);
+    }
 
-#modalSongs p {
-  background: #eef4ff;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
+    .modal-content {
+      background: #ffffff;
+      margin: 8% auto;
+      padding: 25px;
+      width: 90%;
+      max-width: 480px;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      animation: fadeIn 0.3s ease;
+      color: #2c3e50;
+      text-align: center;
+    }
 
-/* Botón de cierre */
-.close {
-  float: right;
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #6c7a89;
-  cursor: pointer;
-  transition: 0.2s;
-}
+    .modal-content h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: #1f2d3d;
+    }
 
-.close:hover {
-  color: #2c3e50;
-}
+    #modalSongs {
+      margin-top: 10px;
+      text-align: left;
+    }
 
-/* Animación */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+    #modalSongs p {
+      background: #eef4ff;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
 
-/* Contenedor scrollable dentro del modal */
-#modalSongs {
-  max-height: 300px;     /* Ajusta según tu preferencia */
-  overflow-y: auto;
-  padding-right: 8px;
-}
+    .close {
+      float: right;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #6c7a89;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-/* Estilo bonito de scrollbar */
-#modalSongs::-webkit-scrollbar {
-  width: 6px;
-}
+    .close:hover {
+      color: #2c3e50;
+    }
 
-#modalSongs::-webkit-scrollbar-thumb {
-  background: #b5c7dd;
-  border-radius: 4px;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-#modalSongs::-webkit-scrollbar-track {
-  background: #eef4ff;
-}
+    #modalSongs {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
 
-     /* LOADER OVERLAY */
-.loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.85);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(3px);
-    z-index: 9999;
-}
+    #modalSongs::-webkit-scrollbar {
+      width: 6px;
+    }
 
-/* Animación del spinner */
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 6px solid #bcd4ff;
-    border-top: 6px solid #1f2d3d;
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-    margin-bottom: 15px;
-}
+    #modalSongs::-webkit-scrollbar-thumb {
+      background: #b5c7dd;
+      border-radius: 4px;
+    }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+    #modalSongs::-webkit-scrollbar-track {
+      background: #eef4ff;
+    }
 
-#loader p {
-    font-size: 1.1rem;
-    color: #1f2d3d;
-    font-weight: 600;
-}
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(3px);
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #bcd4ff;
+      border-top: 6px solid #1f2d3d;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #loader p {
+      font-size: 1.1rem;
+      color: #1f2d3d;
+      font-weight: 600;
+    }
   </style>
 </head>
 
@@ -285,9 +312,13 @@
 
   <h1>Catálogo de Playlists</h1>
 
+  <div class="top-bar">
+      <input id="searchInput" type="text" placeholder="Buscar proveedor de playlists..." class="search-bar">
+            <button id="searchBtn" class="format-btn">Buscar</button>
+
+  </div>
 
   <div id="catalogo" class="catalogo"></div>
-
 
   <div id="playlistModal" class="modal">
     <div class="modal-content">
@@ -300,11 +331,10 @@
   <div id="loader" class="loader-overlay">
     <div class="spinner"></div>
     <p>Cargando playlist...</p>
-    </div>
+  </div>
   
   <script src="script.js"></script>
 
 </body>
 
 </html>
-

@@ -480,17 +480,18 @@ if (document.getElementById("form-card-cancion")) {
     // Agregar event listener al formulario para manejar el submit (recomendado)
     form.addEventListener("submit", crearCancion);
 }
-
-//CATALOGO//
-
-
+// CATALOGO //
 
 if (document.getElementById("catalogo")) {
-   const loader = document.getElementById("loader");
-    loader.style.display = "flex";  // Mostrar pantalla de carga
-  async function cargarCatalogo() {
+  // ---------------------------
+  // 🔹 FUNCIÓN PRINCIPAL
+  // ---------------------------
+  async function cargarCatalogo(url = "http://localhost:8080/api/playlist") {
+    const loader = document.getElementById("loader");
+    loader.style.display = "flex";  // Mostrar pantalla de carga (agregado aquí)
+
     try {
-      const response = await fetch("http://localhost:8080/api/playlist");
+      const response = await fetch(url);
       const playlists = await response.json();
 
       const contenedor = document.getElementById("catalogo");
@@ -519,7 +520,7 @@ if (document.getElementById("catalogo")) {
             // Setear título del modal
             document.getElementById("modalTitle").textContent = playlistDetails.nombre;
 
-            // Crear canciones con estilo limpio
+            // Crear canciones
             const songsHtml =
               playlistDetails.canciones?.length > 0
                 ? playlistDetails.canciones
@@ -557,9 +558,37 @@ if (document.getElementById("catalogo")) {
     }
   }
 
+  // 🚀 Cargar todo al iniciar
   cargarCatalogo();
 
-  // Cerrar modal
+
+  // -----------------------------------------
+  // 🔹 FUNCIÓN DE BÚSQUEDA POR PROVEEDOR
+  // -----------------------------------------
+
+  const searchInput = document.getElementById("searchInput");
+  const searchButton = document.getElementById("searchBtn");
+
+  if (searchButton && searchInput) {
+    searchButton.addEventListener("click", () => {
+      const nombre = searchInput.value.trim();
+
+      if (nombre.length === 0) {
+        // Si está vacío → cargar todo
+        cargarCatalogo("http://localhost:8080/api/playlist");
+        return;
+      }
+
+      // Buscar por proveedor
+      const url = `http://localhost:8080/api/playlist/proveedor/${nombre}`;
+      cargarCatalogo(url);
+    });
+  }
+
+
+  // -----------------------------------------
+  // 🔹 CERRAR MODAL
+  // -----------------------------------------
   document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("playlistModal");
     const closeBtn = document.querySelector(".close");
@@ -572,7 +601,9 @@ if (document.getElementById("catalogo")) {
       if (e.target === modal) modal.style.display = "none";
     });
   });
+
 }
+
 
 //VENTA DE PLAYLIST
 if(document.getElementById("form-card-playlist")){
