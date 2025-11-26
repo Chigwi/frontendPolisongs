@@ -322,7 +322,7 @@ if (document.getElementById("songsContainer")) {
     try {
         const credentials = sessionStorage.getItem("auth");
         const response = await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/${cantidad}`, {
-            method: "DELETE",
+            method: "POST",
             headers: {
                 "Authorization": `Basic ${credentials}`
             }
