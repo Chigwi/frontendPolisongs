@@ -389,24 +389,24 @@ if (document.getElementById("songsContainer")) {
                 const masBtn = controller.querySelector(".masBtn");
                 const menosBtn = controller.querySelector(".menosBtn");
 
-                addBtn.addEventListener("click", () => {
+               addBtn.addEventListener("click", () => {
                     addBtn.style.display = "none";
                     controller.style.display = "flex";
-                    addToCart(song.id);
+                    addToCart(song.id, 1); // al inicio siempre cantidad = 1
                 });
 
                 masBtn.addEventListener("click", () => {
                     let val = parseInt(spanCant.textContent) + 1;
                     spanCant.textContent = val;
-                    addToCart(song.id); // <-- aquí falta pasar val
+                    addToCart(song.id, val); // ahora sí envías la cantidad actual
                 });
 
-                    menosBtn.addEventListener("click", () => {
-                        let val = parseInt(spanCant.textContent);
-                        if (val > 1) {
-                            spanCant.textContent = val - 1;
-                            removeFromCart(song.id); // <-- aquí falta pasar val - 1
-                        }
+                menosBtn.addEventListener("click", () => {
+                    let val = parseInt(spanCant.textContent);
+                    if (val > 1) {
+                        spanCant.textContent = val - 1;
+                        removeFromCart(song.id, val - 1); // envías la nueva cantidad
+                    }
                 });
 
                 container.appendChild(songCard);
