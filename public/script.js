@@ -303,7 +303,7 @@ if (document.getElementById("songsContainer")) {
     try {
         alert("Canción agregada al carrito" + id + " Cantidad: " + cantidad);
         const credentials = sessionStorage.getItem("auth");
-        const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/${cantidad}`, {
+        const response = await fetch(`http://localhost:8080/api/carritoCompras/add2cart/cancion/${id}/1`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -322,7 +322,7 @@ if (document.getElementById("songsContainer")) {
     async function removeFromCart(id, cantidad) {
     try {
         const credentials = sessionStorage.getItem("auth");
-        const response = await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/${cantidad}`, {
+        const response = await fetch(`http://localhost:8080/api/carritoCompras/remove/cancion/${id}/1`, {
             method: "POST",
             headers: {
                 "Authorization": `Basic ${credentials}`
