@@ -118,18 +118,51 @@
             border: 1px solid #c6d6ec;
             white-space: pre-wrap;
         }
+                .nav-link {
+    display: inline-block;  /* Por defecto visible */
+}
+.nav-link[style*="display: none"] {
+    display: none !important;  /* Forzar oculto */
+}
+.carrito-link {
+    position: relative;
+    display: inline-block;
+}
+
+.carrito-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.carrito-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #e60023;
+    color: white;
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
     </style>
 </head>
 
 <body>
 
-    <nav>
-        <a href="home.html">Home</a>
-        <a href="songs.html">Songs</a>
-        <a href="catalogo.html">Playlists</a>
-        <a href="createSong.html">Crear Canción</a>
-        <a href="#" onclick="logout(); return false;">Logout</a>
-    </nav>
+<nav>
+    <a href="carrito.html">
+        <img src="img/carrito.png" alt="Carrito" class="carrito-icon">
+    </a>
+    <a href="home.html">Inicio</a>
+    <a href="songs.html">canciones</a>
+    <a href="catalogo.html">Playlists</a>
+    <a href="ventaPlaylist.html" >Vender Playlist</a>
+    <a href="ventaVinilo.html" >Vender Vinilos</a>
+    <a href="usuario.html" >Usuario</a>
+    <a href="#" onclick="logout(); return false;">
+        <img src="img/log-out.png" alt="Carrito" class="carrito-icon">
+    </a>
+  </nav>
 
     <h1>Crear Nueva Canción</h1>
 
