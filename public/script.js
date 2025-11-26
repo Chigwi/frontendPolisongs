@@ -393,20 +393,20 @@ if (document.getElementById("songsContainer")) {
                addBtn.addEventListener("click", () => {
                     addBtn.style.display = "none";
                     controller.style.display = "flex";
-                    addToCart(song.id, 1); // al inicio siempre cantidad = 1
+                    addToCart(song.idCancion, 1); // al inicio siempre cantidad = 1
                 });
 
                 masBtn.addEventListener("click", () => {
                     let val = parseInt(spanCant.textContent) + 1;
                     spanCant.textContent = val;
-                    addToCart(song.id, val); // ahora sí envías la cantidad actual
+                    addToCart(song.idCancion, val); // ahora sí envías la cantidad actual
                 });
 
                 menosBtn.addEventListener("click", () => {
                     let val = parseInt(spanCant.textContent);
                     if (val > 1) {
                         spanCant.textContent = val - 1;
-                        removeFromCart(song.id, val - 1); // envías la nueva cantidad
+                        removeFromCart(song.idCancion, val - 1); // envías la nueva cantidad
                     }
                 });
 
