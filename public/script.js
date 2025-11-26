@@ -604,7 +604,10 @@ if (document.getElementById("catalogo")) {
 
 }
 
-// VENTA DE PLAYLIST
+
+// Venta de Playlists
+
+if (document.getElementById("form-card-playlist")) {
 
 // Definir funciones globalmente para que onclick las encuentre
 let songIndex = 0;
@@ -646,8 +649,8 @@ function removeSong(index) {
     const box = document.querySelector(`[data-index="${index}"]`);
     if (box) box.remove();
 }
-
-async function crearPlaylist() {
+window.crearPlaylist=async function(event) {
+     if (event) event.preventDefault();  // Prevenir envío si viene de un form submit
     const nombre = document.getElementById("playlistNombre").value.trim();
     const songs = [];
 
@@ -730,10 +733,6 @@ async function crearPlaylist() {
         alert("Error de conexión al servidor. Revisa la consola para detalles.");
     }
 }
-
-// Verificar si el elemento existe (opcional, para lógica adicional si es necesario)
-if (document.getElementById("form-card-playlist")) {
-    // Aquí puedes agregar inicializaciones si las necesitas, pero las funciones ya están globales
 }
 
 
