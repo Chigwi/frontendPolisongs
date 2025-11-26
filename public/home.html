@@ -124,6 +124,27 @@
 .nav-link[style*="display: none"] {
     display: none !important;  /* Forzar oculto */
 }
+.carrito-link {
+    position: relative;
+    display: inline-block;
+}
+
+.carrito-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.carrito-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #e60023;
+    color: white;
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
 </style>
 
 <body>
@@ -139,6 +160,10 @@
     <a href="pedidos.html" class="nav-link auth-required super-required">Pedidos</a>
     <a href="gestionUsuario.html" class="nav-link auth-required super-required">gestionUsuario</a>
     <a href="#" onclick="logout(); return false;" class="nav-link auth-required basic-required">Logout</a>
+    <a href="carrito.html" class="nav-link auth-required basic-required carrito-link">
+        <img src="img/carrito.png" alt="Carrito" class="carrito-icon">
+    <span id="carrito-count" class="carrito-count">0</span>
+    </a>
     <!-- Ocultar Home ya que es la página actual, o agrégalo si quieres -->
 </nav>
 

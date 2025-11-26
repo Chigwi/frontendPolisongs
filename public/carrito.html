@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #e7f1ff;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .cart-container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            animation: fadeIn .5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== ENCABEZADO ===== */
+        .cart-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .cart-header img {
+            width: 45px;
+            animation: popIn .4s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .cart-title-block h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+
+        .cart-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* ===== ITEM DEL CARRITO ===== */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f5f8ff;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 6px solid #6c8cff;
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+
+        .cart-item:hover {
+            transform: scale(1.015);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .item-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .item-type {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .cantidad-controller {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cantidad-controller img {
+            width: 30px;
+            cursor: pointer;
+            transition: transform .1s;
+        }
+
+        .cantidad-controller img:hover {
+            transform: scale(1.15);
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 17px;
+            color: #333;
+        }
+
+        /* ===== RESUMEN ===== */
+        .summary-box {
+            background: #f5f8ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 6px solid #6c8cff;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-row.total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* ===== BOTONES ===== */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-main, .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            transition: background .15s, transform .15s;
+        }
+
+        .btn-main {
+            background: #6c8cff;
+            color: white;
+        }
+
+        .btn-main:hover {
+            background: #5474e6;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #d8e2ff;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #c7d4ff;
+            transform: translateY(-2px);
+        }
+
+        /* ===== CARRITO VACÍO ===== */
+        #emptyCart {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+            animation: fadeIn .5s ease;
+        }
+
+        #emptyCart img {
+            width: 160px;
+            opacity: .8;
+        }
+
+        /* ===== MINI CARRITO LATERAL ===== */
+        #miniCart {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 320px;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 15px 0 0 15px;
+            transition: right .35s ease;
+            z-index: 9999;
+        }
+
+        #miniCart.open {
+            right: 0;
+        }
+
+        #miniCart h3 {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .mini-cart-item {
+            margin-top: 15px;
+            background: #f5f8ff;
+            padding: 12px;
+            border-radius: 12px;
+            border-left: 4px solid #6c8cff;
+        }
+
+        .mini-cart-footer {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .close-mini {
+            cursor: pointer;
+            font-size: 20px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: #eee;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-floating-btn {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: #6c8cff;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform .15s;
+        }
+
+        .cart-floating-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-floating-btn img {
+            width: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- MINI CARRITO LATERAL -->
+    <div id="miniCart">
+        <div class="close-mini" onclick="toggleMiniCart()">×</div>
+        <h3>Tu carrito</h3>
+        <div id="miniCartItems"></div>
+        <div class="mini-cart-footer">
+            <button class="btn-main" onclick="window.location.href='carrito.html'">
+                Ir a pago
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="cart-container">
+
+        <div class="cart-header">
+            <img src="img/Polisongs.png">
+            <div class="cart-title-block">
+                <h1>Carrito de Compras</h1>
+                <span class="cart-subtitle">Revisa tus productos antes de continuar.</span>
+            </div>
+        </div>
+
+        <!-- Carrito vacío -->
+        <div id="emptyCart">
+            <img src="img/carrito.png">
+            <h2>Tu carrito está vacío</h2>
+            <p>Agrega canciones o playlists para continuar.</p>
+        </div>
+
+        <!-- Items -->
+        <div id="cartItems"></div>
+
+        <!-- Resumen -->
+        <div class="summary-box">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$<span id="subtotalValue">0</span></span>
+            </div>
+            <div class="summary-row">
+                <span>IVA (19%)</span>
+                <span>$<span id="ivaValue">0</span></span>
+            </div>
+            <div class="summary-row">
+                <span>Envío</span>
+                <span>$0</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>$<span id="totalValue">0</span></span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-secondary" onclick="window.location.href='catalogo.html'">
+                <img src="img/carritokeepbuying.png" width="22"> Seguir comprando
+            </button>
+
+            <button class="btn-main">
+                <img src="img/credit-card-icon-16.png" width="22"> Proceder al pago
+            </button>
+        </div>
+
+    </div>
+
+<script src="cart.js"></script>
+</body>
+</html>
