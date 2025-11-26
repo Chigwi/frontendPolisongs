@@ -322,6 +322,33 @@
       background: #002748;
       transform: scale(1.03);
     }
+       .nav-link {
+    display: inline-block;  /* Por defecto visible */
+}
+.nav-link[style*="display: none"] {
+    display: none !important;  /* Forzar oculto */
+}
+.carrito-link {
+    position: relative;
+    display: inline-block;
+}
+
+.carrito-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.carrito-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #e60023;
+    color: white;
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
 
   </style>
 </head>
@@ -329,10 +356,18 @@
 <body>
 
   <nav>
-    <a href="home.html">Home</a>
-    <a href="songs.html">Songs</a>
-    <a href="catalogo.html">Playlists</a>
-    <a href="#" onclick="logout(); return false;">Logout</a>
+    <a href="carrito.html">
+        <img src="img/carrito.png" alt="Carrito" class="carrito-icon">
+    </a>
+    <a href="home.html">Inicio</a>
+    <a href="songs.html">Canciones</a>
+    <a href="ventaCanciones.html" >Vender Canciones</a>
+    <a href="ventaPlaylist.html" >Vender Playlist</a>
+    <a href="ventaVinilo.html" >Vender Vinilos</a>
+    <a href="usuario.html" >Usuario</a>
+    <a href="#" onclick="logout(); return false;" class="nav-link auth-required basic-required">
+        <img src="img/log-out.png" alt="Carrito" class="carrito-icon">
+    </a>
   </nav>
 
   <div class="image-slot">
